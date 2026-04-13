@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clara Braga — Links</title>
+  <meta name="description" content="Produtos e cupons recomendados pela Clara Braga" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <div class="hero__avatar">💪</div>
+    <h1 class="hero__name">Clara <span>Braga</span></h1>
+    <p class="hero__bio">Personal trainer & creator fitness. Aqui você encontra tudo que eu uso e recomendo!</p>
+    <span class="hero__badge">✨ Links oficiais</span>
+  </header>
+
+  <!-- ===== PRODUTOS ===== -->
+  <main>
+    <section class="section">
+      <h2 class="section__title">Produtos recomendados</h2>
+      <div class="cards" id="produtos-container">
+        <p class="loading">Carregando produtos...</p>
+      </div>
+    </section>
+
+    <!-- ===== CUPONS ===== -->
+    <section class="section">
+      <h2 class="section__title">Cupons ativos</h2>
+      <div class="cards" id="cupons-container">
+        <p class="loading">Carregando cupons...</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Feito com 💗 por Clara Braga</p>
+  </footer>
+
+  <script>
+    const PRODUCT_ICONS = {
+      whey: '🥛',
+      creatina: '💊',
+      colageno: '✨',
+      'pre-treino': '⚡',
+      desconto: '🏷️',
+    };
+
+    function getIcon(slug) {
+      return PRODUCT_ICONS[slug] || '🛍️';
+    }
+
+    function el(tag, cls) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      return e;
+    }
+
+    function buildProductCard(link) {
+      const card = el('div', 'card');
+
+      const header = el('div', 'card__header');
+      const icon = el('div', 'card__icon');
+      icon.textContent = getIcon(link.slug);
+      const title = el('div', 'card__title');
+      title.textContent = link.title;
+      header.appendChild(icon);
+      header.appendChild(title);
+      card.appendChild(header);
+
+      if (link.description) {
+        const desc = el('p', 'card__desc');
+        desc.textContent = link.description;
+        card.appendChild(desc);
+      }
+
+      if (link.coupon_code) {
+        const coupon = el('div', 'card__coupon');
+        coupon.textContent = '🏷️ ' + link.coupon_code;
+        card.appendChild(coupon);
+      }
+
+      const cta = el('a', 'card__cta');
+      cta.href = '/' + link.slug;
+      const ctaText = el('span');
+      ctaText.textContent = 'Comprar agora';
+      const arrow = el('span', 'card__cta-arrow');
+      arrow.textContent = '→';
+      cta.appendChild(ctaText);
+      cta.appendChild(arrow);
+      card.appendChild(cta);
+
+      return card;
+    }
+
+    function buildCouponCard(link) {
+      const card = el('div', 'coupon-card');
+
+      const label = el('span', 'coupon-card__label');
+      label.textContent = 'cupom ativo';
+      card.appendChild(label);
+
+      const title = el('div', 'coupon-card__title');
+      title.textContent = link.title;
+      card.appendChild(title);
+
+      const code = el('div', 'coupon-card__code');
+      code.textContent = link.coupon_code;
+      card.appendChild(code);
+
+      const cta = el('a', 'coupon-card__cta');
+      cta.href = '/' + link.slug;
+      cta.textContent = 'Usar cupom →';
+      card.appendChild(cta);
+
+      return card;
+    }
+
+    async function loadLinks() {
+      try {
+        const res = await fetch('/api/links');
+        if (!res.ok) throw new Error('Falha ao buscar links');
+        const links = await res.json();
+
+        const produtos = links.filter(function(l) { return l.category === 'produto'; });
+        const cupons = links.filter(function(l) { return l.category === 'cupom'; });
+
+        const prodContainer = document.getElementById('produtos-container');
+        const cupContainer = document.getElementById('cupons-container');
+
+        prodContainer.replaceChildren();
+        if (produtos.length) {
+          produtos.forEach(function(l) { prodContainer.appendChild(buildProductCard(l)); });
+        } else {
+          const p = el('p', 'loading');
+          p.textContent = 'Nenhum produto disponível.';
+          prodContainer.appendChild(p);
+        }
+
+        cupContainer.replaceChildren();
+        if (cupons.length) {
+          cupons.forEach(function(l) { cupContainer.appendChild(buildCouponCard(l)); });
+        } else {
+          const p = el('p', 'loading');
+          p.textContent = 'Nenhum cupom ativo no momento.';
+          cupContainer.appendChild(p);
+        }
+      } catch (err) {
+        console.error('Erro ao carregar links:', err);
+      }
+    }
+
+    loadLinks();
+  </script>
+</body>
+</html>
