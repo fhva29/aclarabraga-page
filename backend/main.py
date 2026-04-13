@@ -61,10 +61,11 @@ INITIAL_LINKS = [
 def startup():
     Base.metadata.create_all(bind=engine)
     with get_db() as db:
-        if db.query(Link).count() == 0:
-            for data in INITIAL_LINKS:
+        for data in INITIAL_LINKS:
+            exists = db.query(Link).filter(Link.slug == data["slug"]).first()
+            if not exists:
                 db.add(Link(**data))
-            db.commit()
+        db.commit()
 
 
 # --- Static files (CSS, assets) ---
