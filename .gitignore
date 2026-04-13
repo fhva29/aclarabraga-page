@@ -4,3 +4,4 @@ __pycache__/
 *.db
 .ruff_cache/
 .env
+.notes/
