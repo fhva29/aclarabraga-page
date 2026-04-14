@@ -87,6 +87,7 @@ class LinkOut(BaseModel):
     title: str
     description: str | None
     coupon_code: str | None
+    icon: str | None
     category: str
 
     class Config:

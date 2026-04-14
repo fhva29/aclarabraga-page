@@ -321,9 +321,25 @@ body {
 
 /* ========== PRODUCT CARDS ========== */
 .cards {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .section:not(.section--coupons) {
+    max-width: 1060px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, 480px);
+    justify-content: center;
+  }
+
+  .section--coupons .cards {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+  }
 }
 
 .card {

@@ -95,16 +95,8 @@
   </footer>
 
   <script>
-    const PRODUCT_ICONS = {
-      whey: '🥛',
-      creatina: '💊',
-      colageno: '✨',
-      'pre-treino': '⚡',
-      desconto: '🏷️',
-    };
-
-    function getIcon(slug) {
-      return PRODUCT_ICONS[slug] || '🛍️';
+    function getIcon(link) {
+      return link.icon || '🛍️';
     }
 
     function el(tag, cls) {
@@ -118,7 +110,7 @@
 
       const header = el('div', 'card__header');
       const icon = el('div', 'card__icon');
-      icon.textContent = getIcon(link.slug);
+      icon.textContent = getIcon(link);
       const title = el('div', 'card__title');
       title.textContent = link.title;
       header.appendChild(icon);

@@ -77,6 +77,12 @@
     }
 
     .btn-primary:hover { background: #d94a78; }
+    .btn-primary:disabled,
+    .btn-add:disabled,
+    .btn-sm:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
 
     .login-error {
       color: #e05;
@@ -249,6 +255,104 @@
 
     .btn-activate:hover { background: #1a8c56; color: #fff; }
 
+    .btn-delete {
+      border-color: #888;
+      color: #888;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 9px;
+    }
+
+    .btn-delete:hover { background: #c0392b; border-color: #c0392b; color: #fff; }
+
+    .btn-delete svg { display: block; }
+
+    /* ---- Confirm dialog ---- */
+    #confirm-dialog {
+      border: none;
+      border-radius: 16px;
+      padding: 0;
+      box-shadow: 0 8px 40px rgba(0,0,0,.22);
+      width: 100%;
+      max-width: 380px;
+    }
+
+    #confirm-dialog::backdrop { background: rgba(0,0,0,.45); }
+
+    .confirm-body {
+      padding: 32px 28px 24px;
+      text-align: center;
+    }
+
+    .confirm-icon {
+      width: 52px;
+      height: 52px;
+      background: #fdecea;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .confirm-icon svg { color: #c0392b; }
+
+    .confirm-body h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #2d2d2d;
+      margin-bottom: 8px;
+    }
+
+    .confirm-body p {
+      font-size: .9rem;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    .confirm-body p strong { color: #2d2d2d; }
+
+    .confirm-footer {
+      padding: 0 28px 28px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-confirm-cancel {
+      flex: 1;
+      background: none;
+      border: 1.5px solid #ddd;
+      color: #666;
+      border-radius: 9px;
+      padding: 11px;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .btn-confirm-cancel:hover { border-color: #aaa; color: #333; }
+
+    .btn-confirm-delete {
+      flex: 1;
+      background: #c0392b;
+      border: none;
+      color: #fff;
+      border-radius: 9px;
+      padding: 11px;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .btn-confirm-delete:hover { background: #a93226; }
+    .btn-confirm-delete:disabled { opacity: .6; cursor: not-allowed; }
+
     .empty-row td {
       text-align: center;
       padding: 40px;
@@ -264,6 +368,11 @@
       box-shadow: 0 8px 40px rgba(0,0,0,.18);
       width: 100%;
       max-width: 480px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
     }
 
     dialog::backdrop { background: rgba(0,0,0,.4); }
@@ -353,6 +462,38 @@
       min-height: 18px;
     }
 
+    /* ---- Icon picker ---- */
+    .icon-picker {
+      border: 1.5px solid #f0d0dd;
+      border-radius: 9px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .icon-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid transparent;
+      border-radius: 8px;
+      background: #fdf6f9;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+      line-height: 1;
+    }
+
+    .icon-btn:hover { background: #f8eaf1; border-color: #F25C8A; }
+    .icon-btn.selected { background: #F25C8A22; border-color: #F25C8A; }
+
     @media (max-width: 600px) {
       header { padding: 14px 16px; }
       .container { padding: 18px 12px; }
@@ -434,6 +575,13 @@
       <input type="text" id="field-coupon" placeholder="CLARA10" />
     </div>
     <div class="form-group">
+      <label>Ícone</label>
+      <div class="icon-picker">
+        <div class="icon-grid" id="icon-grid"></div>
+        <input type="hidden" id="field-icon" value="" />
+      </div>
+    </div>
+    <div class="form-group">
       <label for="field-category">Categoria</label>
       <select id="field-category">
         <option value="produto">Produto</option>
@@ -448,10 +596,59 @@
   </div>
 </dialog>
 
+<!-- ===== CONFIRM DELETE DIALOG ===== -->
+<dialog id="confirm-dialog">
+  <div class="confirm-body">
+    <div class="confirm-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+      </svg>
+    </div>
+    <h3>Excluir link?</h3>
+    <p>O link <strong id="confirm-slug-label"></strong> será removido permanentemente. Esta ação não pode ser desfeita.</p>
+  </div>
+  <div class="confirm-footer">
+    <button class="btn-confirm-cancel" id="confirm-cancel-btn" type="button">Cancelar</button>
+    <button class="btn-confirm-delete" id="confirm-delete-btn" type="button">Excluir</button>
+  </div>
+</dialog>
+
 <script>
   // ---- State ----
   let editingLinkId = null;
   let cachedLinks = [];
+
+  // ---- Icon picker ----
+  const ICONS = [
+    '🥛','💊','✨','⚡','🏋️','🏃','🧘','🥗','🍎','🥑',
+    '🧃','💧','🫐','🍋','🥦','🐟','🍗','🥚','🧂','🫚',
+    '🏅','🎽','👟','⌚','🎧','📦','🛍️','🏷️','💰','🎁',
+    '💪','🔥','❤️','⭐','🌟','✅','🆕','📣','🎯','🧡',
+  ];
+
+  (function buildIconGrid() {
+    const grid = document.getElementById('icon-grid');
+    ICONS.forEach(function(emoji) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'icon-btn';
+      btn.textContent = emoji;
+      btn.dataset.emoji = emoji;
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.icon-btn').forEach(function(b) { b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        document.getElementById('field-icon').value = emoji;
+      });
+      grid.appendChild(btn);
+    });
+  })();
+
+  function setIconPicker(emoji) {
+    document.getElementById('field-icon').value = emoji || '';
+    document.querySelectorAll('.icon-btn').forEach(function(btn) {
+      btn.classList.toggle('selected', btn.dataset.emoji === emoji);
+    });
+  }
 
   // ---- Auth ----
   function authHeader() {
@@ -484,6 +681,9 @@
   async function attemptLogin() {
     const password = document.getElementById('password-input').value.trim();
     if (!password) return;
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.textContent = 'Entrando…';
     saveToken(password);
     try {
       const res = await fetch('/api/admin/links', { headers: authHeader() });
@@ -495,6 +695,9 @@
     } catch {
       clearToken();
       showLogin('Erro de rede.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
     }
   }
 
@@ -538,6 +741,44 @@
     btn.className = 'btn-sm ' + classes;
     btn.textContent = label;
     btn.addEventListener('click', handler);
+    return btn;
+  }
+
+  function makeDeleteBtn(id, slug) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const btn = document.createElement('button');
+    btn.className = 'btn-sm btn-delete';
+    btn.title = 'Excluir link';
+
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('width', '15');
+    svg.setAttribute('height', '15');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2.2');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+
+    function addPath(d) {
+      const el = document.createElementNS(NS, 'path');
+      el.setAttribute('d', d);
+      svg.appendChild(el);
+    }
+    function addPolyline(points) {
+      const el = document.createElementNS(NS, 'polyline');
+      el.setAttribute('points', points);
+      svg.appendChild(el);
+    }
+
+    addPolyline('3 6 5 6 21 6');
+    addPath('M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6');
+    addPath('M10 11v6');
+    addPath('M14 11v6');
+    addPath('M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2');
+
+    btn.appendChild(svg);
+    btn.addEventListener('click', function() { openConfirmDelete(id, slug); });
     return btn;
   }
 
@@ -595,14 +836,16 @@
       }));
 
       if (link.is_active) {
-        actionsDiv.appendChild(makeActionBtn('Desativar', 'btn-deactivate', function() {
-          toggleActive(link.id, false);
+        actionsDiv.appendChild(makeActionBtn('Desativar', 'btn-deactivate', function(e) {
+          toggleActive(link.id, false, e.currentTarget);
         }));
       } else {
-        actionsDiv.appendChild(makeActionBtn('Ativar', 'btn-activate', function() {
-          toggleActive(link.id, true);
+        actionsDiv.appendChild(makeActionBtn('Ativar', 'btn-activate', function(e) {
+          toggleActive(link.id, true, e.currentTarget);
         }));
       }
+
+      actionsDiv.appendChild(makeDeleteBtn(link.id, link.slug));
 
       actionsTd.appendChild(actionsDiv);
       tr.appendChild(actionsTd);
@@ -627,6 +870,7 @@
     document.getElementById('field-url').value = '';
     document.getElementById('field-coupon').value = '';
     document.getElementById('field-category').value = 'produto';
+    setIconPicker('');
     document.getElementById('modal-error').textContent = '';
     modal.showModal();
     document.getElementById('field-slug').focus();
@@ -644,6 +888,7 @@
     document.getElementById('field-url').value = link.destination_url;
     document.getElementById('field-coupon').value = link.coupon_code || '';
     document.getElementById('field-category').value = link.category;
+    setIconPicker(link.icon || '');
     document.getElementById('modal-error').textContent = '';
     modal.showModal();
     document.getElementById('field-title').focus();
@@ -654,11 +899,15 @@
   async function saveLink() {
     const errorEl = document.getElementById('modal-error');
     errorEl.textContent = '';
+    const saveBtn = document.getElementById('modal-save-btn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Salvando…';
 
     const title = document.getElementById('field-title').value.trim();
     const description = document.getElementById('field-description').value.trim() || null;
     const destination_url = document.getElementById('field-url').value.trim();
     const coupon_code = document.getElementById('field-coupon').value.trim() || null;
+    const icon = document.getElementById('field-icon').value || null;
     const category = document.getElementById('field-category').value;
 
     if (!title) { errorEl.textContent = 'Título é obrigatório.'; return; }
@@ -669,13 +918,13 @@
     if (editingLinkId) {
       url = '/api/admin/links/' + editingLinkId;
       method = 'PUT';
-      body = JSON.stringify({ title, description, destination_url, coupon_code, category });
+      body = JSON.stringify({ title, description, destination_url, coupon_code, icon, category });
     } else {
       const slug = document.getElementById('field-slug').value.trim();
       if (!slug) { errorEl.textContent = 'Slug é obrigatório.'; return; }
       url = '/api/admin/links';
       method = 'POST';
-      body = JSON.stringify({ slug, title, description, destination_url, coupon_code, category });
+      body = JSON.stringify({ slug, title, description, destination_url, coupon_code, icon, category });
     }
 
     try {
@@ -695,11 +944,16 @@
       loadLinks();
     } catch {
       errorEl.textContent = 'Erro de rede.';
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Salvar';
     }
   }
 
   // ---- Toggle active ----
-  async function toggleActive(id, activate) {
+  async function toggleActive(id, activate, btn) {
+    btn.disabled = true;
+    btn.textContent = activate ? 'Ativando…' : 'Desativando…';
     try {
       let res;
       if (activate) {
@@ -718,8 +972,45 @@
       loadLinks();
     } catch {
       console.error('Erro ao alterar status do link');
+      btn.disabled = false;
+      btn.textContent = activate ? 'Ativar' : 'Desativar';
     }
   }
+
+  // ---- Confirm delete dialog ----
+  const confirmDialog = document.getElementById('confirm-dialog');
+  let pendingDeleteId = null;
+
+  function openConfirmDelete(id, slug) {
+    pendingDeleteId = id;
+    document.getElementById('confirm-slug-label').textContent = '/' + slug;
+    document.getElementById('confirm-delete-btn').disabled = false;
+    document.getElementById('confirm-delete-btn').textContent = 'Excluir';
+    confirmDialog.showModal();
+  }
+
+  document.getElementById('confirm-cancel-btn').addEventListener('click', function() {
+    confirmDialog.close();
+  });
+
+  document.getElementById('confirm-delete-btn').addEventListener('click', async function() {
+    if (!pendingDeleteId) return;
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Excluindo…';
+    try {
+      const res = await fetch('/api/admin/links/' + pendingDeleteId + '/hard', {
+        method: 'DELETE',
+        headers: authHeader(),
+      });
+      if (res.status === 401) { confirmDialog.close(); showLogin('Sessão expirada.'); return; }
+      confirmDialog.close();
+      loadLinks();
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Excluir';
+    }
+  });
 
   // ---- Init ----
   if (sessionStorage.getItem('admin_token')) {

@@ -18,6 +18,7 @@ class LinkCreate(BaseModel):
     description: str | None = None
     destination_url: str
     coupon_code: str | None = None
+    icon: str | None = None
     category: str = "produto"
 
 
@@ -26,6 +27,7 @@ class LinkUpdate(BaseModel):
     description: str | None = None
     destination_url: str | None = None
     coupon_code: str | None = None
+    icon: str | None = None
     category: str | None = None
     is_active: bool | None = None
 
@@ -37,6 +39,7 @@ class LinkAdminOut(BaseModel):
     description: str | None
     destination_url: str
     coupon_code: str | None
+    icon: str | None
     category: str
     is_active: bool
     created_at: datetime
@@ -67,6 +70,7 @@ def admin_list_links(_=Depends(require_admin)):
                 description=link.description,
                 destination_url=link.destination_url,
                 coupon_code=link.coupon_code,
+                icon=link.icon,
                 category=link.category,
                 is_active=link.is_active,
                 created_at=link.created_at,
@@ -95,6 +99,7 @@ def admin_create_link(data: LinkCreate, _=Depends(require_admin)):
             description=link.description,
             destination_url=link.destination_url,
             coupon_code=link.coupon_code,
+            icon=link.icon,
             category=link.category,
             is_active=link.is_active,
             created_at=link.created_at,
@@ -124,6 +129,7 @@ def admin_update_link(link_id: int, data: LinkUpdate, _=Depends(require_admin)):
             description=link.description,
             destination_url=link.destination_url,
             coupon_code=link.coupon_code,
+            icon=link.icon,
             category=link.category,
             is_active=link.is_active,
             created_at=link.created_at,
@@ -132,13 +138,27 @@ def admin_update_link(link_id: int, data: LinkUpdate, _=Depends(require_admin)):
 
 
 @router.delete("/links/{link_id}")
-def admin_delete_link(link_id: int, _=Depends(require_admin)):
+def admin_deactivate_link(link_id: int, _=Depends(require_admin)):
     with get_db() as db:
         link = db.query(Link).filter(Link.id == link_id).first()
         if not link:
             raise HTTPException(status_code=404, detail="Link not found")
 
         link.is_active = False
+        db.commit()
+
+        return {"ok": True}
+
+
+@router.delete("/links/{link_id}/hard")
+def admin_hard_delete_link(link_id: int, _=Depends(require_admin)):
+    with get_db() as db:
+        link = db.query(Link).filter(Link.id == link_id).first()
+        if not link:
+            raise HTTPException(status_code=404, detail="Link not found")
+
+        db.query(Click).filter(Click.link_id == link_id).delete()
+        db.delete(link)
         db.commit()
 
         return {"ok": True}
