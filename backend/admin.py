@@ -1,8 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from auth import require_admin
 from database import get_db
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from models import Click, Link
 from pydantic import BaseModel
 from sqlalchemy import func
@@ -11,6 +11,7 @@ router = APIRouter(prefix="/api/admin", tags=["admin"])
 
 
 # --- Schemas ---
+
 
 class LinkCreate(BaseModel):
     slug: str
@@ -50,6 +51,7 @@ class LinkAdminOut(BaseModel):
 
 
 # --- Routes ---
+
 
 @router.get("/links", response_model=list[LinkAdminOut])
 def admin_list_links(_=Depends(require_admin)):
@@ -162,3 +164,66 @@ def admin_hard_delete_link(link_id: int, _=Depends(require_admin)):
         db.commit()
 
         return {"ok": True}
+
+
+# --- Analytics Routes ---
+
+
+@router.get("/analytics/clicks-per-link")
+def analytics_clicks_per_link(
+    days: int = Query(default=30, ge=1, le=365),
+    _=Depends(require_admin),
+):
+    since = datetime.utcnow() - timedelta(days=days)
+    with get_db() as db:
+        rows = (
+            db.query(Link.slug, Link.title, func.count(Click.id).label("clicks"))
+            .outerjoin(
+                Click,
+                (Click.link_id == Link.id) & (Click.timestamp >= since),
+            )
+            .group_by(Link.id)
+            .order_by(func.count(Click.id).desc())
+            .all()
+        )
+        return [{"slug": r.slug, "title": r.title, "clicks": r.clicks} for r in rows]
+
+
+@router.get("/analytics/clicks-per-day")
+def analytics_clicks_per_day(
+    days: int = Query(default=30, ge=1, le=365),
+    _=Depends(require_admin),
+):
+    since = datetime.utcnow() - timedelta(days=days)
+    with get_db() as db:
+        rows = (
+            db.query(
+                func.date(Click.timestamp).label("date"),
+                func.count(Click.id).label("clicks"),
+            )
+            .filter(Click.timestamp >= since)
+            .group_by(func.date(Click.timestamp))
+            .order_by(func.date(Click.timestamp).desc())
+            .all()
+        )
+        return [{"date": str(r.date), "clicks": r.clicks} for r in rows]
+
+
+@router.get("/analytics/clicks-per-source")
+def analytics_clicks_per_source(
+    days: int = Query(default=30, ge=1, le=365),
+    _=Depends(require_admin),
+):
+    since = datetime.utcnow() - timedelta(days=days)
+    with get_db() as db:
+        rows = (
+            db.query(
+                func.coalesce(Click.source, "(direto)").label("source"),
+                func.count(Click.id).label("clicks"),
+            )
+            .filter(Click.timestamp >= since)
+            .group_by(func.coalesce(Click.source, "(direto)"))
+            .order_by(func.count(Click.id).desc())
+            .all()
+        )
+        return [{"source": r.source, "clicks": r.clicks} for r in rows]

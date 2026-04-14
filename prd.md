@@ -211,18 +211,38 @@ Tornar o projeto acessível publicamente com dados persistentes entre redeploys.
 
 ---
 
-### 🟡 Fase 4 — Analytics
+### 🟢 Fase 4 — Analytics (Concluído ✅)
 
 #### Features:
-- Dashboard simples (no próprio painel admin ou página separada):
-  - cliques por link
-  - cliques por dia
-  - cliques por origem (`src`)
-- Filtros básicos por período
+- Dashboard integrado ao painel admin (aba "Analytics")
+- Cliques por link com barra proporcional (ranking visual)
+- Cliques por dia (tabela, mais recente primeiro)
+- Cliques por origem (`src`) com barra proporcional
+- Filtros de período: 7 / 30 / 90 dias
+- Cards de resumo: total de cliques, links com cliques, período
 
 #### Valor:
 - Entender o que gera resultado
 - Base para decisões de conteúdo e negociação com marcas
+
+---
+
+### 🟡 Fase 4.5 — Gerador de Links por Canal
+
+#### Features:
+- Botão "Gerar Link" na tabela de links do painel admin
+- Abre um popup com os 3 links prontos para copiar:
+  - `/{slug}?src=bio`
+  - `/{slug}?src=reels`
+  - `/{slug}?src=stories`
+- Botão "Copiar" individual para cada link
+- Feedback visual ao copiar (ex: "Copiado!" por 2 segundos)
+- Nenhum dado novo é salvo — é apenas uma UI de conveniência sobre links existentes
+
+#### Valor:
+- Elimina trabalho manual de montar o link com `?src=` na hora de postar
+- Reduz erro de digitação do parâmetro
+- Acelera o uso do tracking de origem no dia a dia
 
 ---
 
@@ -253,6 +273,31 @@ Tornar o projeto acessível publicamente com dados persistentes entre redeploys.
 - Gestão de cupons com data de validade
 - Página de rotina (ex: `/rotina-manha`)
 - Páginas específicas por campanha
+
+---
+
+### 🔴 Fase 7.5 — Diário de Postagens por Marca
+
+#### Features:
+- Aba "Postagens" no painel admin (protegida pela mesma autenticação)
+- Cadastro de marcas parceiras (nome, ativa/inativa)
+- Registro manual de postagens: tipo (`story` | `reel`), data de publicação, observações opcionais
+- Visualização por marca: total de stories, total de reels, lista cronológica
+- Entrada 100% manual — sem integração com Instagram
+
+#### Modelo de dados:
+- **`brands`**: id, name, is_active
+- **`posts`**: id, brand_id (FK), type, posted_at, notes, created_at
+
+#### Fora de escopo:
+- Metas ou cotas contratadas por marca
+- Upload de mídia ou screenshot do post
+- Exportação de relatório
+
+#### Valor:
+- Controle próprio sem depender de planilha
+- Facilita prestação de contas para marcas
+- Base para negociações futuras com dados reais de entrega
 
 ---
 

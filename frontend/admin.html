@@ -97,17 +97,51 @@
     header {
       background: #fff;
       border-bottom: 1.5px solid #f0d0dd;
-      padding: 16px 28px;
+      padding: 0 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 16px;
     }
 
-    header h1 {
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    header .brand {
       font-size: 1.3rem;
       font-weight: 800;
       color: #F25C8A;
+      padding: 16px 20px 16px 0;
+      white-space: nowrap;
     }
+
+    /* ---- Tabs ---- */
+    .tabs {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      height: 100%;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 16px 18px 13px;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 700;
+      color: #aaa;
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover { color: #F25C8A; }
+    .tab-btn.active { color: #F25C8A; border-bottom-color: #F25C8A; }
 
     .btn-ghost {
       background: none;
@@ -120,6 +154,7 @@
       font-weight: 700;
       cursor: pointer;
       transition: all .2s;
+      white-space: nowrap;
     }
 
     .btn-ghost:hover { background: #F25C8A; color: #fff; }
@@ -129,6 +164,10 @@
       margin: 0 auto;
       padding: 28px 20px;
     }
+
+    /* ---- Tab panels ---- */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
     .toolbar {
       display: flex;
@@ -494,11 +533,157 @@
     .icon-btn:hover { background: #f8eaf1; border-color: #F25C8A; }
     .icon-btn.selected { background: #F25C8A22; border-color: #F25C8A; }
 
+    /* ---- Analytics ---- */
+    .analytics-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .analytics-toolbar h2 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #2d2d2d;
+    }
+
+    .period-filter {
+      display: flex;
+      gap: 6px;
+    }
+
+    .period-btn {
+      background: none;
+      border: 1.5px solid #f0d0dd;
+      color: #888;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-family: inherit;
+      font-size: .85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .period-btn:hover { border-color: #F25C8A; color: #F25C8A; }
+    .period-btn.active { background: #F25C8A; border-color: #F25C8A; color: #fff; }
+
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px 22px;
+      box-shadow: 0 2px 16px rgba(242,92,138,.08);
+    }
+
+    .stat-label {
+      font-size: .78rem;
+      font-weight: 700;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #F25C8A;
+      line-height: 1;
+    }
+
+    .stat-sub {
+      font-size: .8rem;
+      color: #bbb;
+      margin-top: 4px;
+    }
+
+    .analytics-section {
+      margin-bottom: 28px;
+    }
+
+    .analytics-section h3 {
+      font-size: .88rem;
+      font-weight: 800;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 12px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #fdf0f5;
+    }
+
+    .bar-row:last-child { border-bottom: none; }
+
+    .bar-label {
+      font-size: .88rem;
+      font-weight: 700;
+      min-width: 120px;
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 8px;
+      background: #f8eaf1;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #F25C8A, #ff8fb1);
+      border-radius: 4px;
+      transition: width .4s ease;
+    }
+
+    .bar-count {
+      font-size: .88rem;
+      font-weight: 800;
+      color: #2d2d2d;
+      min-width: 32px;
+      text-align: right;
+    }
+
+    .analytics-empty {
+      text-align: center;
+      padding: 24px;
+      color: #ccc;
+      font-style: italic;
+    }
+
+    .analytics-loading {
+      text-align: center;
+      padding: 48px;
+      color: #ccc;
+      font-style: italic;
+    }
+
     @media (max-width: 600px) {
-      header { padding: 14px 16px; }
+      header { padding: 0 16px; }
       .container { padding: 18px 12px; }
       table { font-size: .82rem; }
       thead th, tbody td { padding: 10px 10px; }
+      .stats-cards { grid-template-columns: 1fr 1fr; }
+      .stats-cards .stat-card:last-child { grid-column: 1 / -1; }
+      .bar-label { min-width: 80px; max-width: 110px; }
     }
   </style>
 </head>
@@ -518,32 +703,59 @@
 <!-- ===== ADMIN ===== -->
 <section id="admin-screen">
   <header>
-    <h1>✦ Clara Admin</h1>
+    <div class="header-left">
+      <span class="brand">&#10022; Clara Admin</span>
+      <nav class="tabs">
+        <button class="tab-btn active" data-tab="links">Links</button>
+        <button class="tab-btn" data-tab="analytics">Analytics</button>
+      </nav>
+    </div>
     <button class="btn-ghost" id="logout-btn">Sair</button>
   </header>
 
   <div class="container">
-    <div class="toolbar">
-      <button class="btn-add" id="new-link-btn">+ Novo Link</button>
+
+    <!-- ===== LINKS TAB ===== -->
+    <div class="tab-panel active" id="tab-links">
+      <div class="toolbar">
+        <button class="btn-add" id="new-link-btn">+ Novo Link</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Slug</th>
+              <th>Título</th>
+              <th>Categoria</th>
+              <th>Status</th>
+              <th>Cliques</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="links-tbody">
+            <tr class="empty-row"><td colspan="6">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Slug</th>
-            <th>Título</th>
-            <th>Categoria</th>
-            <th>Status</th>
-            <th>Cliques</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="links-tbody">
-          <tr class="empty-row"><td colspan="6">Carregando...</td></tr>
-        </tbody>
-      </table>
+    <!-- ===== ANALYTICS TAB ===== -->
+    <div class="tab-panel" id="tab-analytics">
+      <div class="analytics-toolbar">
+        <h2>Analytics</h2>
+        <div class="period-filter">
+          <button class="period-btn" data-days="7">7 dias</button>
+          <button class="period-btn active" data-days="30">30 dias</button>
+          <button class="period-btn" data-days="90">90 dias</button>
+        </div>
+      </div>
+
+      <div id="analytics-content">
+        <div class="analytics-loading">Carregando dados...</div>
+      </div>
     </div>
+
   </div>
 </section>
 
@@ -617,6 +829,7 @@
   // ---- State ----
   let editingLinkId = null;
   let cachedLinks = [];
+  let currentDays = 30;
 
   // ---- Icon picker ----
   const ICONS = [
@@ -710,7 +923,29 @@
     showLogin();
   });
 
-  // ---- Load & render ----
+  // ---- Tabs ----
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
+      if (tab === 'analytics') loadAnalytics(currentDays);
+    });
+  });
+
+  // ---- Period filter ----
+  document.querySelectorAll('.period-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      currentDays = parseInt(btn.dataset.days, 10);
+      document.querySelectorAll('.period-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      loadAnalytics(currentDays);
+    });
+  });
+
+  // ---- Load & render (Links tab) ----
   async function loadLinks() {
     try {
       const res = await fetch('/api/admin/links', { headers: authHeader() });
@@ -800,25 +1035,20 @@
     links.forEach(function(link) {
       const tr = document.createElement('tr');
 
-      // Slug
       tr.appendChild(makeCell(makeBadge(link.slug, 'slug-badge')));
 
-      // Title
       const titleTd = document.createElement('td');
       titleTd.textContent = link.title;
       tr.appendChild(titleTd);
 
-      // Category
       const catClass = link.category === 'cupom' ? 'cat-badge cat-cupom' : 'cat-badge cat-produto';
       const catLabel = link.category === 'cupom' ? 'Cupom' : 'Produto';
       tr.appendChild(makeCell(makeBadge(catLabel, catClass)));
 
-      // Status
       const statusClass = link.is_active ? 'status-badge status-active' : 'status-badge status-inactive';
       const statusLabel = link.is_active ? 'Ativo' : 'Inativo';
       tr.appendChild(makeCell(makeBadge(statusLabel, statusClass)));
 
-      // Clicks
       const clicksTd = document.createElement('td');
       const clicksSpan = document.createElement('span');
       clicksSpan.className = 'clicks-num';
@@ -826,7 +1056,6 @@
       clicksTd.appendChild(clicksSpan);
       tr.appendChild(clicksTd);
 
-      // Actions
       const actionsTd = document.createElement('td');
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'actions';
@@ -851,6 +1080,215 @@
       tr.appendChild(actionsTd);
       tbody.appendChild(tr);
     });
+  }
+
+  // ---- Analytics ----
+  async function loadAnalytics(days) {
+    const container = document.getElementById('analytics-content');
+    container.replaceChildren();
+    const loadingMsg = document.createElement('div');
+    loadingMsg.className = 'analytics-loading';
+    loadingMsg.textContent = 'Carregando dados...';
+    container.appendChild(loadingMsg);
+
+    try {
+      const [perLink, perDay, perSource] = await Promise.all([
+        fetch('/api/admin/analytics/clicks-per-link?days=' + days, { headers: authHeader() }).then(function(r) {
+          if (r.status === 401) { showLogin('Sessão expirada.'); throw new Error('unauthorized'); }
+          return r.json();
+        }),
+        fetch('/api/admin/analytics/clicks-per-day?days=' + days, { headers: authHeader() }).then(function(r) { return r.json(); }),
+        fetch('/api/admin/analytics/clicks-per-source?days=' + days, { headers: authHeader() }).then(function(r) { return r.json(); }),
+      ]);
+
+      const totalClicks = perLink.reduce(function(sum, r) { return sum + r.clicks; }, 0);
+      const activeLinks = perLink.filter(function(r) { return r.clicks > 0; }).length;
+
+      container.replaceChildren();
+
+      // Summary cards
+      container.appendChild(buildStatCards(totalClicks, activeLinks, perLink.length, days));
+
+      // Cliques por link
+      container.appendChild(buildBarSection(
+        'Cliques por Link',
+        perLink,
+        function(r) { return r.title || r.slug; },
+        function(r) { return r.clicks; }
+      ));
+
+      // Cliques por origem
+      container.appendChild(buildBarSection(
+        'Cliques por Origem',
+        perSource,
+        function(r) { return r.source; },
+        function(r) { return r.clicks; }
+      ));
+
+      // Cliques por dia
+      container.appendChild(buildDayTable(perDay));
+
+    } catch (err) {
+      if (err.message !== 'unauthorized') {
+        container.replaceChildren();
+        const errMsg = document.createElement('div');
+        errMsg.className = 'analytics-loading';
+        errMsg.textContent = 'Erro ao carregar dados.';
+        container.appendChild(errMsg);
+      }
+    }
+  }
+
+  function buildStatCards(totalClicks, activeLinks, totalLinks, days) {
+    const grid = document.createElement('div');
+    grid.className = 'stats-cards';
+
+    function makeCard(labelText, valueText, subText) {
+      const card = document.createElement('div');
+      card.className = 'stat-card';
+
+      const label = document.createElement('div');
+      label.className = 'stat-label';
+      label.textContent = labelText;
+
+      const value = document.createElement('div');
+      value.className = 'stat-value';
+      value.textContent = valueText;
+
+      const sub = document.createElement('div');
+      sub.className = 'stat-sub';
+      sub.textContent = subText;
+
+      card.appendChild(label);
+      card.appendChild(value);
+      card.appendChild(sub);
+      return card;
+    }
+
+    grid.appendChild(makeCard('Total de cliques', String(totalClicks), 'nos últimos ' + days + ' dias'));
+    grid.appendChild(makeCard('Links com cliques', String(activeLinks), 'de ' + totalLinks + ' links'));
+    grid.appendChild(makeCard('Período', String(days), 'dias analisados'));
+
+    return grid;
+  }
+
+  function buildBarSection(title, rows, labelFn, valueFn) {
+    const section = document.createElement('div');
+    section.className = 'analytics-section';
+
+    const h3 = document.createElement('h3');
+    h3.textContent = title;
+    section.appendChild(h3);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    wrap.style.padding = '12px 16px';
+
+    if (!rows.length) {
+      const empty = document.createElement('div');
+      empty.className = 'analytics-empty';
+      empty.textContent = 'Sem dados para o período.';
+      wrap.appendChild(empty);
+      section.appendChild(wrap);
+      return section;
+    }
+
+    const max = Math.max.apply(null, rows.map(valueFn)) || 1;
+
+    rows.forEach(function(row) {
+      const count = valueFn(row);
+      const pct = Math.round((count / max) * 100);
+
+      const div = document.createElement('div');
+      div.className = 'bar-row';
+
+      const label = document.createElement('span');
+      label.className = 'bar-label';
+      label.title = labelFn(row);
+      label.textContent = labelFn(row);
+
+      const track = document.createElement('div');
+      track.className = 'bar-track';
+
+      const fill = document.createElement('div');
+      fill.className = 'bar-fill';
+      fill.style.width = pct + '%';
+      track.appendChild(fill);
+
+      const countSpan = document.createElement('span');
+      countSpan.className = 'bar-count';
+      countSpan.textContent = String(count);
+
+      div.appendChild(label);
+      div.appendChild(track);
+      div.appendChild(countSpan);
+      wrap.appendChild(div);
+    });
+
+    section.appendChild(wrap);
+    return section;
+  }
+
+  function buildDayTable(rows) {
+    const section = document.createElement('div');
+    section.className = 'analytics-section';
+
+    const h3 = document.createElement('h3');
+    h3.textContent = 'Cliques por Dia';
+    section.appendChild(h3);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+
+    if (!rows.length) {
+      const empty = document.createElement('div');
+      empty.className = 'analytics-empty';
+      empty.textContent = 'Sem dados para o período.';
+      wrap.appendChild(empty);
+      section.appendChild(wrap);
+      return section;
+    }
+
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+
+    const th1 = document.createElement('th');
+    th1.textContent = 'Data';
+    const th2 = document.createElement('th');
+    th2.textContent = 'Cliques';
+    headerRow.appendChild(th1);
+    headerRow.appendChild(th2);
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    rows.forEach(function(row) {
+      const tr = document.createElement('tr');
+
+      const dateParts = String(row.date).split('-');
+      const formatted = dateParts.length === 3
+        ? dateParts[2] + '/' + dateParts[1] + '/' + dateParts[0]
+        : String(row.date);
+
+      const dateTd = document.createElement('td');
+      dateTd.textContent = formatted;
+
+      const clicksTd = document.createElement('td');
+      const clicksSpan = document.createElement('span');
+      clicksSpan.className = 'clicks-num';
+      clicksSpan.textContent = String(row.clicks);
+      clicksTd.appendChild(clicksSpan);
+
+      tr.appendChild(dateTd);
+      tr.appendChild(clicksTd);
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    section.appendChild(wrap);
+    return section;
   }
 
   // ---- Modal ----
@@ -910,8 +1348,8 @@
     const icon = document.getElementById('field-icon').value || null;
     const category = document.getElementById('field-category').value;
 
-    if (!title) { errorEl.textContent = 'Título é obrigatório.'; return; }
-    if (!destination_url) { errorEl.textContent = 'URL de destino é obrigatória.'; return; }
+    if (!title) { errorEl.textContent = 'Título é obrigatório.'; saveBtn.disabled = false; saveBtn.textContent = 'Salvar'; return; }
+    if (!destination_url) { errorEl.textContent = 'URL de destino é obrigatória.'; saveBtn.disabled = false; saveBtn.textContent = 'Salvar'; return; }
 
     let url, method, body;
 
@@ -921,7 +1359,7 @@
       body = JSON.stringify({ title, description, destination_url, coupon_code, icon, category });
     } else {
       const slug = document.getElementById('field-slug').value.trim();
-      if (!slug) { errorEl.textContent = 'Slug é obrigatório.'; return; }
+      if (!slug) { errorEl.textContent = 'Slug é obrigatório.'; saveBtn.disabled = false; saveBtn.textContent = 'Salvar'; return; }
       url = '/api/admin/links';
       method = 'POST';
       body = JSON.stringify({ slug, title, description, destination_url, coupon_code, icon, category });
