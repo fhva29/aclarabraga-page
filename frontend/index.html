@@ -186,6 +186,20 @@
       return card;
     }
 
+    function buildEmptyState(icon, title, sub, light) {
+      const wrap = el('div', 'empty-state' + (light ? ' empty-state--light' : ''));
+      const iconEl = el('div', 'empty-state__icon');
+      iconEl.textContent = icon;
+      const titleEl = el('p', 'empty-state__title');
+      titleEl.textContent = title;
+      const subEl = el('p', 'empty-state__sub');
+      subEl.textContent = sub;
+      wrap.appendChild(iconEl);
+      wrap.appendChild(titleEl);
+      wrap.appendChild(subEl);
+      return wrap;
+    }
+
     async function loadLinks() {
       try {
         const res = await fetch('/api/links');
@@ -202,18 +216,14 @@
         if (produtos.length) {
           produtos.forEach(function(l) { prodContainer.appendChild(buildProductCard(l)); });
         } else {
-          const p = el('p', 'empty');
-          p.textContent = 'Nenhum produto disponível no momento.';
-          prodContainer.appendChild(p);
+          prodContainer.appendChild(buildEmptyState('🛍️', 'Em breve por aqui', 'Novos produtos chegando em breve. Fique de olho!', false));
         }
 
         cupContainer.replaceChildren();
         if (cupons.length) {
           cupons.forEach(function(l) { cupContainer.appendChild(buildCouponCard(l)); });
         } else {
-          const p = el('p', 'empty empty--light');
-          p.textContent = 'Nenhum cupom ativo no momento.';
-          cupContainer.appendChild(p);
+          cupContainer.appendChild(buildEmptyState('🏷️', 'Nenhum cupom ativo', 'Novos cupons exclusivos em breve. Volta logo!', true));
         }
         observeCards();
       } catch (err) {
