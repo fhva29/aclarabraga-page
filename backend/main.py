@@ -1,6 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 
+import admin as admin_module
 from database import Base, engine, get_db
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, RedirectResponse
@@ -12,6 +13,7 @@ from sqlalchemy import func
 FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
 
 app = FastAPI(title="Clara Braga — Links")
+app.include_router(admin_module.router)
 
 INITIAL_LINKS = [
     {
@@ -107,6 +109,12 @@ def stats():
             .all()
         )
         return [{"slug": r.slug, "title": r.title, "clicks": r.clicks} for r in rows]
+
+
+# --- Admin panel ---
+@app.get("/admin", include_in_schema=False)
+def admin_panel():
+    return FileResponse(str(FRONTEND_DIR / "admin.html"))
 
 
 # --- Redirect + tracking ---

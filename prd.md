@@ -172,19 +172,20 @@ O backend detecta automaticamente qual banco usar pela variável `DATABASE_URL`.
 
 ---
 
-### 🟡 Fase 2 — Deploy & Infraestrutura
+### 🟢 Fase 2 — Deploy & Infraestrutura (Concluído ✅)
 
 #### Objetivo:
 Tornar o projeto acessível publicamente com dados persistentes entre redeploys.
 
 #### Tasks:
-- Configurar variável `DATABASE_URL` para alternar entre SQLite (local) e PostgreSQL (produção)
-- Criar projeto no Supabase e obter connection string
-- Adicionar `psycopg2-binary` ao `requirements.txt`
-- Criar arquivo `.env.example` com as variáveis necessárias
-- Corrigir seed de dados para usar `INSERT IF NOT EXISTS`
-- Fazer deploy do backend (Railway / Render / Fly.io)
-- Configurar variáveis de ambiente no serviço de deploy
+- ✅ Configurar variável `DATABASE_URL` para alternar entre SQLite (local) e PostgreSQL (produção)
+- ✅ Criar projeto no Supabase e obter connection string (Session Pooler, sa-east-1)
+- ✅ Adicionar `psycopg2-binary` e `python-dotenv` ao `requirements.txt`
+- ✅ Criar arquivo `.env.example` com as variáveis necessárias
+- ✅ Corrigir seed de dados para usar upsert por slug
+- ✅ Criar `Procfile` para deploy no Render
+- ✅ MCP do Supabase configurado no projeto
+- ✅ Fazer deploy no Render e configurar variáveis de ambiente
 
 #### Valor:
 - Projeto online e acessível
