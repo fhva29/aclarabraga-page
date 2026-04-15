@@ -227,7 +227,7 @@ Tornar o projeto acessível publicamente com dados persistentes entre redeploys.
 
 ---
 
-### 🟡 Fase 4.5 — Gerador de Links por Canal
+### 🟢 Fase 4.5 — Gerador de Links por Canal (Concluído ✅)
 
 #### Features:
 - Botão "Gerar Link" na tabela de links do painel admin

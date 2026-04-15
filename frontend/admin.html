@@ -230,6 +230,7 @@
       padding: 3px 8px;
       border-radius: 6px;
       font-size: .85rem;
+      white-space: nowrap;
     }
 
     .cat-badge {
@@ -676,6 +677,79 @@
       font-style: italic;
     }
 
+    /* ---- Link generator dialog ---- */
+    #link-gen-dialog {
+      border: none;
+      border-radius: 16px;
+      padding: 0;
+      box-shadow: 0 8px 40px rgba(0,0,0,.18);
+      width: 100%;
+      max-width: 460px;
+    }
+
+    #link-gen-dialog::backdrop { background: rgba(0,0,0,.4); }
+
+    .link-gen-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #fdf0f5;
+    }
+
+    .link-gen-row:last-child { border-bottom: none; }
+
+    .link-gen-src {
+      font-size: .78rem;
+      font-weight: 800;
+      color: #F25C8A;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      min-width: 52px;
+    }
+
+    .link-gen-url {
+      flex: 1;
+      font-size: .85rem;
+      color: #555;
+      background: #fdf6f9;
+      border: 1px solid #f0d0dd;
+      border-radius: 7px;
+      padding: 7px 10px;
+      font-family: inherit;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: text;
+      user-select: all;
+    }
+
+    .btn-copy {
+      flex-shrink: 0;
+      background: none;
+      border: 1.5px solid #F25C8A;
+      color: #F25C8A;
+      border-radius: 7px;
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: .8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+      min-width: 72px;
+    }
+
+    .btn-copy:hover { background: #F25C8A; color: #fff; }
+    .btn-copy.copied { background: #1a8c56; border-color: #1a8c56; color: #fff; }
+
+    .btn-link {
+      border-color: #888;
+      color: #888;
+      background: none;
+    }
+
+    .btn-link:hover { background: #888; color: #fff; border-color: #888; }
+
     @media (max-width: 600px) {
       header { padding: 0 16px; }
       .container { padding: 18px 12px; }
@@ -805,6 +879,21 @@
   <div class="modal-footer">
     <button class="btn-cancel" id="modal-cancel-btn" type="button">Cancelar</button>
     <button class="btn-primary" id="modal-save-btn" type="button" style="width:auto;padding:10px 24px">Salvar</button>
+  </div>
+</dialog>
+
+<!-- ===== LINK GENERATOR DIALOG ===== -->
+<dialog id="link-gen-dialog">
+  <div class="modal-header">
+    <h2 id="link-gen-title">Gerar Links</h2>
+    <button class="modal-close" id="link-gen-close-btn" type="button">&#215;</button>
+  </div>
+  <div class="modal-body">
+    <p style="font-size:.88rem;color:#888;margin-bottom:16px">Links prontos para copiar e colar no Instagram:</p>
+    <div id="link-gen-rows"></div>
+  </div>
+  <div class="modal-footer" style="justify-content:flex-end">
+    <button class="btn-cancel" id="link-gen-cancel-btn" type="button">Fechar</button>
   </div>
 </dialog>
 
@@ -1059,6 +1148,10 @@
       const actionsTd = document.createElement('td');
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'actions';
+
+      actionsDiv.appendChild(makeActionBtn('Gerar Link', 'btn-link', function() {
+        openLinkGenDialog(link.slug, link.title);
+      }));
 
       actionsDiv.appendChild(makeActionBtn('Editar', 'btn-edit', function() {
         openEditModal(link.id);
@@ -1449,6 +1542,61 @@
       btn.textContent = 'Excluir';
     }
   });
+
+  // ---- Link generator dialog ----
+  const linkGenDialog = document.getElementById('link-gen-dialog');
+  const LINK_GEN_SOURCES = ['bio', 'reels', 'stories'];
+
+  document.getElementById('link-gen-close-btn').addEventListener('click', function() { linkGenDialog.close(); });
+  document.getElementById('link-gen-cancel-btn').addEventListener('click', function() { linkGenDialog.close(); });
+
+  function openLinkGenDialog(slug, title) {
+    document.getElementById('link-gen-title').textContent = 'Links — ' + title;
+
+    const rowsContainer = document.getElementById('link-gen-rows');
+    rowsContainer.replaceChildren();
+
+    const base = window.location.origin + '/' + slug;
+
+    LINK_GEN_SOURCES.forEach(function(src) {
+      const url = base + '?src=' + src;
+
+      const row = document.createElement('div');
+      row.className = 'link-gen-row';
+
+      const srcLabel = document.createElement('span');
+      srcLabel.className = 'link-gen-src';
+      srcLabel.textContent = src;
+
+      const urlInput = document.createElement('input');
+      urlInput.type = 'text';
+      urlInput.className = 'link-gen-url';
+      urlInput.value = url;
+      urlInput.readOnly = true;
+
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'btn-copy';
+      copyBtn.textContent = 'Copiar';
+      copyBtn.addEventListener('click', function() {
+        navigator.clipboard.writeText(url).then(function() {
+          copyBtn.textContent = 'Copiado!';
+          copyBtn.classList.add('copied');
+          setTimeout(function() {
+            copyBtn.textContent = 'Copiar';
+            copyBtn.classList.remove('copied');
+          }, 2000);
+        });
+      });
+
+      row.appendChild(srcLabel);
+      row.appendChild(urlInput);
+      row.appendChild(copyBtn);
+      rowsContainer.appendChild(row);
+    });
+
+    linkGenDialog.showModal();
+  }
 
   // ---- Init ----
   if (sessionStorage.getItem('admin_token')) {
