@@ -125,14 +125,43 @@
 
       if (link.coupon_code) {
         const coupon = el('div', 'card__coupon');
-        coupon.textContent = '🏷️ ' + link.coupon_code;
+        const couponCode = '🏷️ ' + link.coupon_code;
+        const couponCopied = '✓ Copiado!';
+        coupon.textContent = couponCode;
+        coupon.addEventListener('click', function() {
+          navigator.clipboard.writeText(link.coupon_code).then(function() {
+            coupon.textContent = couponCopied;
+            coupon.classList.add('card__coupon--copied');
+            setTimeout(function() {
+              coupon.textContent = couponCode;
+              coupon.classList.remove('card__coupon--copied');
+            }, 2000);
+          });
+        });
         card.appendChild(coupon);
       }
 
       const cta = el('a', 'card__cta');
-      cta.href = '/' + link.slug;
+      if (link.coupon_code) {
+        cta.addEventListener('click', function(e) {
+          e.preventDefault();
+          navigator.clipboard.writeText(link.coupon_code).then(function() {
+            cta.querySelector('span').textContent = '✓ Cupom copiado! Indo para loja →';
+            cta.classList.add('card__cta--copied');
+            setTimeout(function() {
+              window.open('/' + link.slug, '_blank');
+            }, 500);
+            setTimeout(function() {
+              cta.querySelector('span').textContent = 'Comprar agora →';
+              cta.classList.remove('card__cta--copied');
+            }, 2500);
+          });
+        });
+      } else {
+        cta.href = '/' + link.slug;
+      }
       const ctaText = el('span');
-      ctaText.textContent = 'Comprar agora';
+      ctaText.textContent = 'Comprar agora →';
       const arrow = el('span', 'card__cta-arrow');
       arrow.textContent = '→';
       cta.appendChild(ctaText);
@@ -162,11 +191,22 @@
       const codeWrap = el('div', 'coupon-card__code-wrap');
       const code = el('div', 'coupon-card__code');
       code.textContent = link.coupon_code;
+      code.style.cursor = 'pointer';
+      code.addEventListener('click', function() {
+        navigator.clipboard.writeText(link.coupon_code).then(function() {
+          code.textContent = '✓ Copiado!';
+          code.classList.add('coupon-card__code--copied');
+          setTimeout(function() {
+            code.textContent = link.coupon_code;
+            code.classList.remove('coupon-card__code--copied');
+          }, 2000);
+        });
+      });
       const copyBtn = el('button', 'coupon-card__copy');
       copyBtn.textContent = 'copiar';
       copyBtn.addEventListener('click', function() {
         navigator.clipboard.writeText(link.coupon_code).then(function() {
-          copyBtn.textContent = '✓ copiado!';
+          copyBtn.textContent = '✓ Copiado!';
           copyBtn.classList.add('coupon-card__copy--done');
           setTimeout(function() {
             copyBtn.textContent = 'copiar';

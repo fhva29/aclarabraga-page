@@ -17,6 +17,7 @@
   --gray: #7a6e6b;
   --gray-light: #f5f0ee;
   --white: #ffffff;
+  --green: #22c55e;
   --radius-sm: 12px;
   --radius: 20px;
   --radius-lg: 32px;
@@ -410,6 +411,25 @@ body {
   border-radius: 8px;
   letter-spacing: 1.5px;
   width: fit-content;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card__coupon:active {
+  transform: scale(0.95);
+}
+
+.card__coupon--copied {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+  animation: pulse 0.4s ease;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
 
 .card__cta {
@@ -429,11 +449,22 @@ body {
   border: none;
   width: 100%;
   letter-spacing: 0.3px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card__cta:hover {
   opacity: 0.92;
   transform: scale(0.99);
+}
+
+.card__cta {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card__cta--copied {
+  background: var(--green) !important;
+  animation: pulse 0.4s ease;
+}
 }
 
 .card__cta-arrow {
@@ -498,6 +529,13 @@ body {
   letter-spacing: 3px;
   flex: 1;
   text-align: center;
+  cursor: pointer;
+}
+
+.coupon-card__code--copied {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
 }
 
 .coupon-card__copy {
