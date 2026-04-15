@@ -152,7 +152,7 @@
               window.open('/' + link.slug, '_blank');
             }, 500);
             setTimeout(function() {
-              cta.querySelector('span').textContent = 'Comprar agora →';
+              cta.querySelector('span').textContent = 'Comprar agora';
               cta.classList.remove('card__cta--copied');
             }, 2500);
           });
@@ -161,7 +161,7 @@
         cta.href = '/' + link.slug;
       }
       const ctaText = el('span');
-      ctaText.textContent = 'Comprar agora →';
+      ctaText.textContent = 'Comprar agora';
       const arrow = el('span', 'card__cta-arrow');
       arrow.textContent = '→';
       cta.appendChild(ctaText);
