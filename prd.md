@@ -246,37 +246,7 @@ Tornar o projeto acessível publicamente com dados persistentes entre redeploys.
 
 ---
 
-### 🟡 Fase 5 — Tracking Avançado
-
-#### Features:
-- Identificação automática de origem por referrer HTTP
-- Parâmetros dinâmicos padronizados (`?src=reels`, `?src=stories`, `?src=bio`)
-- Rate limiting na rota `/{slug}` para evitar cliques artificiais
-
-#### Valor:
-- Saber qual conteúdo converte mais sem depender de parâmetro manual
-
----
-
-### 🔴 Fase 6 — Otimização de Conversão
-
-#### Features:
-- A/B testing de links (diferentes destinos por campanha)
-- CTAs dinâmicos por origem
-- Agendamento de links ativos por período
-
----
-
-### 🔴 Fase 7 — Plataforma Completa
-
-#### Features:
-- Gestão de cupons com data de validade
-- Página de rotina (ex: `/rotina-manha`)
-- Páginas específicas por campanha
-
----
-
-### 🔴 Fase 7.5 — Diário de Postagens por Marca
+### 🟡 Fase 5 — Diário de Postagens por Marca
 
 #### Features:
 - Aba "Postagens" no painel admin (protegida pela mesma autenticação)
@@ -301,7 +271,37 @@ Tornar o projeto acessível publicamente com dados persistentes entre redeploys.
 
 ---
 
-### 🔴 Fase 8 — Monetização & Escala
+### 🔴 Fase 6 — Tracking Avançado
+
+#### Features:
+- Identificação automática de origem por referrer HTTP
+- Parâmetros dinâmicos padronizados (`?src=reels`, `?src=stories`, `?src=bio`)
+- Rate limiting na rota `/{slug}` para evitar cliques artificiais
+
+#### Valor:
+- Saber qual conteúdo converte mais sem depender de parâmetro manual
+
+---
+
+### 🔴 Fase 7 — Otimização de Conversão
+
+#### Features:
+- A/B testing de links (diferentes destinos por campanha)
+- CTAs dinâmicos por origem
+- Agendamento de links ativos por período
+
+---
+
+### 🔴 Fase 8 — Plataforma Completa
+
+#### Features:
+- Gestão de cupons com data de validade
+- Página de rotina (ex: `/rotina-manha`)
+- Páginas específicas por campanha
+
+---
+
+### 🔴 Fase 9 — Monetização & Escala
 
 #### Features:
 - Integração com redes de afiliados
