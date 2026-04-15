@@ -5,6 +5,33 @@ from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 
+class Brand(Base):
+    __tablename__ = "brands"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False)
+    is_active = Column(Boolean, default=True)
+    monthly_story_goal = Column(Integer, nullable=True)
+    monthly_reel_goal = Column(Integer, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    posts = relationship("Post", back_populates="brand")
+
+
+class Post(Base):
+    __tablename__ = "posts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    brand_id = Column(Integer, ForeignKey("brands.id"), nullable=False)
+    type = Column(String, nullable=False)  # "story" | "reel"
+    posted_at = Column(DateTime, nullable=False)
+    notes = Column(String, nullable=True)
+    media_url = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    brand = relationship("Brand", back_populates="posts")
+
+
 class Link(Base):
     __tablename__ = "links"
 

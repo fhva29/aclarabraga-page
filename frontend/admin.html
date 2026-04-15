@@ -759,6 +759,201 @@
       .stats-cards .stat-card:last-child { grid-column: 1 / -1; }
       .bar-label { min-width: 80px; max-width: 110px; }
     }
+
+    /* ---- Posts tab ---- */
+    .posts-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .posts-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brand-filter-select {
+      padding: 8px 12px;
+      border: 1.5px solid #f0d0dd;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: .9rem;
+      background: #fff;
+      color: #2d2d2d;
+      outline: none;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+
+    .brand-filter-select:focus { border-color: #F25C8A; }
+
+    .brand-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .brand-stat-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 16px rgba(242,92,138,.08);
+    }
+
+    .brand-stat-card.inactive { opacity: .55; }
+
+    .brand-stat-name {
+      font-size: .95rem;
+      font-weight: 800;
+      color: #2d2d2d;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .brand-inactive-badge {
+      font-size: .72rem;
+      font-weight: 700;
+      background: #f0f0f0;
+      color: #999;
+      border-radius: 5px;
+      padding: 2px 7px;
+    }
+
+    .goal-row {
+      margin-bottom: 10px;
+    }
+
+    .goal-label {
+      font-size: .78rem;
+      font-weight: 700;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .goal-fraction {
+      font-weight: 800;
+      color: #2d2d2d;
+    }
+
+    .goal-track {
+      height: 7px;
+      background: #f8eaf1;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .goal-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .4s ease;
+    }
+
+    .goal-fill-story { background: linear-gradient(90deg, #F25C8A, #ff8fb1); }
+    .goal-fill-reel  { background: linear-gradient(90deg, #a855f7, #d8b4fe); }
+    .goal-fill-done  { background: #1a8c56; }
+
+    .post-type-badge {
+      font-size: .78rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .type-story { background: #fce8f1; color: #c2185b; }
+    .type-reel  { background: #ede9fe; color: #7c3aed; }
+
+    .post-media-thumb {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 7px;
+      border: 1.5px solid #f0d0dd;
+      display: block;
+      cursor: pointer;
+    }
+
+    .post-no-media {
+      width: 40px;
+      height: 40px;
+      background: #fdf0f5;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ddd;
+      font-size: 1.1rem;
+    }
+
+    /* media lightbox */
+    #media-lightbox {
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      max-width: 90vw;
+      max-height: 90vh;
+      padding: 0;
+    }
+
+    #media-lightbox::backdrop { background: rgba(0,0,0,.75); cursor: pointer; }
+
+    #media-lightbox img {
+      max-width: 85vw;
+      max-height: 85vh;
+      border-radius: 10px;
+      display: block;
+    }
+
+    /* upload preview */
+    .upload-preview {
+      margin-top: 8px;
+      display: none;
+    }
+
+    .upload-preview img {
+      max-width: 100%;
+      max-height: 160px;
+      border-radius: 8px;
+      border: 1.5px solid #f0d0dd;
+      display: block;
+    }
+
+    .upload-progress {
+      font-size: .82rem;
+      color: #F25C8A;
+      margin-top: 6px;
+    }
+
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #f0d0dd;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: .95rem;
+      outline: none;
+      resize: vertical;
+      min-height: 72px;
+      transition: border-color .2s;
+    }
+
+    .form-group textarea:focus { border-color: #F25C8A; }
+
+    @media (max-width: 600px) {
+      .brand-stats-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -782,6 +977,7 @@
       <nav class="tabs">
         <button class="tab-btn active" data-tab="links">Links</button>
         <button class="tab-btn" data-tab="analytics">Analytics</button>
+        <button class="tab-btn" data-tab="posts">Postagens</button>
       </nav>
     </div>
     <button class="btn-ghost" id="logout-btn">Sair</button>
@@ -827,6 +1023,40 @@
 
       <div id="analytics-content">
         <div class="analytics-loading">Carregando dados...</div>
+      </div>
+    </div>
+
+    <!-- ===== POSTS TAB ===== -->
+    <div class="tab-panel" id="tab-posts">
+      <div class="posts-toolbar">
+        <h2 style="font-size:1.1rem;font-weight:800;color:#2d2d2d">Postagens</h2>
+        <div class="posts-toolbar-right">
+          <select class="brand-filter-select" id="posts-brand-filter">
+            <option value="">Todas as marcas</option>
+          </select>
+          <button class="btn-add" id="new-post-btn">+ Nova Postagem</button>
+          <button class="btn-add" id="manage-brands-btn" style="background:#888">Gerenciar Marcas</button>
+        </div>
+      </div>
+
+      <div id="brand-stats-container" class="brand-stats-grid"></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mídia</th>
+              <th>Marca</th>
+              <th>Tipo</th>
+              <th>Data</th>
+              <th>Observações</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="posts-tbody">
+            <tr class="empty-row"><td colspan="6">Carregando...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -895,6 +1125,102 @@
   <div class="modal-footer" style="justify-content:flex-end">
     <button class="btn-cancel" id="link-gen-cancel-btn" type="button">Fechar</button>
   </div>
+</dialog>
+
+<!-- ===== POST MODAL ===== -->
+<dialog id="post-modal">
+  <div class="modal-header">
+    <h2 id="post-modal-title">Nova Postagem</h2>
+    <button class="modal-close" id="post-modal-close-btn" type="button">&#215;</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="post-field-brand">Marca</label>
+      <select id="post-field-brand"></select>
+    </div>
+    <div class="form-group">
+      <label for="post-field-type">Tipo</label>
+      <select id="post-field-type">
+        <option value="story">Story</option>
+        <option value="reel">Reel</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="post-field-date">Data da postagem</label>
+      <input type="datetime-local" id="post-field-date" />
+    </div>
+    <div class="form-group">
+      <label for="post-field-notes">Observações <small style="color:#aaa">(opcional)</small></label>
+      <textarea id="post-field-notes" placeholder="Ex: parceria paga, link na bio, etc."></textarea>
+    </div>
+    <div class="form-group">
+      <label for="post-field-media">Mídia <small style="color:#aaa">(imagem opcional)</small></label>
+      <input type="file" id="post-field-media" accept="image/*" style="width:100%;font-family:inherit;font-size:.9rem;" />
+      <div class="upload-preview" id="post-upload-preview">
+        <img id="post-upload-thumb" src="" alt="Preview" />
+        <div class="upload-progress" id="post-upload-progress"></div>
+      </div>
+      <input type="hidden" id="post-field-media-url" value="" />
+    </div>
+    <div class="form-error" id="post-modal-error"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-cancel" id="post-modal-cancel-btn" type="button">Cancelar</button>
+    <button class="btn-primary" id="post-modal-save-btn" type="button" style="width:auto;padding:10px 24px">Salvar</button>
+  </div>
+</dialog>
+
+<!-- ===== BRANDS MANAGER MODAL ===== -->
+<dialog id="brands-modal">
+  <div class="modal-header">
+    <h2>Gerenciar Marcas</h2>
+    <button class="modal-close" id="brands-modal-close-btn" type="button">&#215;</button>
+  </div>
+  <div class="modal-body" style="max-height:60vh;overflow-y:auto">
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <input type="text" id="brand-name-input" placeholder="Nome da marca" style="flex:1;padding:10px 14px;border:1.5px solid #f0d0dd;border-radius:9px;font-family:inherit;font-size:.95rem;outline:none;" />
+      <button class="btn-add" id="brand-add-btn" style="white-space:nowrap">Adicionar</button>
+    </div>
+    <div class="form-error" id="brand-add-error"></div>
+    <div id="brands-list-container"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-cancel" id="brands-modal-cancel-btn" type="button">Fechar</button>
+  </div>
+</dialog>
+
+<!-- ===== BRAND EDIT MODAL ===== -->
+<dialog id="brand-edit-modal">
+  <div class="modal-header">
+    <h2 id="brand-edit-title">Editar Marca</h2>
+    <button class="modal-close" id="brand-edit-close-btn" type="button">&#215;</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="brand-edit-name">Nome</label>
+      <input type="text" id="brand-edit-name" />
+    </div>
+    <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <label for="brand-edit-story-goal">Meta stories/mês <small style="color:#aaa">(opcional)</small></label>
+        <input type="number" id="brand-edit-story-goal" min="0" placeholder="–" />
+      </div>
+      <div>
+        <label for="brand-edit-reel-goal">Meta reels/mês <small style="color:#aaa">(opcional)</small></label>
+        <input type="number" id="brand-edit-reel-goal" min="0" placeholder="–" />
+      </div>
+    </div>
+    <div class="form-error" id="brand-edit-error"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-cancel" id="brand-edit-cancel-btn" type="button">Cancelar</button>
+    <button class="btn-primary" id="brand-edit-save-btn" type="button" style="width:auto;padding:10px 24px">Salvar</button>
+  </div>
+</dialog>
+
+<!-- ===== MEDIA LIGHTBOX ===== -->
+<dialog id="media-lightbox">
+  <img id="lightbox-img" src="" alt="Mídia da postagem" />
 </dialog>
 
 <!-- ===== CONFIRM DELETE DIALOG ===== -->
@@ -1596,6 +1922,600 @@
     });
 
     linkGenDialog.showModal();
+  }
+
+  // ---- Posts tab ----
+  let cachedBrands = [];
+  let cachedStats = [];
+  let editingPostId = null;
+  let editingBrandId = null;
+  let currentBrandFilter = '';
+
+  // Tab switch: load posts when tab becomes active
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      if (btn.dataset.tab === 'posts') {
+        loadPostsTab();
+      }
+    });
+  });
+
+  async function loadPostsTab() {
+    await Promise.all([loadBrandsData(), loadPostsStats()]);
+    loadPosts(currentBrandFilter);
+  }
+
+  async function loadBrandsData() {
+    try {
+      const res = await fetch('/api/admin/brands', { headers: authHeader() });
+      if (res.status === 401) { showLogin('Sessão expirada.'); return; }
+      cachedBrands = await res.json();
+      populateBrandSelects();
+      renderBrandFilterOptions();
+    } catch (e) {
+      console.error('Erro ao carregar marcas', e);
+    }
+  }
+
+  async function loadPostsStats() {
+    try {
+      const res = await fetch('/api/admin/posts/stats', { headers: authHeader() });
+      if (!res.ok) return;
+      cachedStats = await res.json();
+      renderBrandStatCards();
+    } catch (e) {
+      console.error('Erro ao carregar stats', e);
+    }
+  }
+
+  function populateBrandSelects() {
+    const sel = document.getElementById('post-field-brand');
+    sel.replaceChildren();
+    cachedBrands.filter(function(b) { return b.is_active; }).forEach(function(b) {
+      const opt = document.createElement('option');
+      opt.value = String(b.id);
+      opt.textContent = b.name;
+      sel.appendChild(opt);
+    });
+  }
+
+  function renderBrandFilterOptions() {
+    const sel = document.getElementById('posts-brand-filter');
+    const current = sel.value;
+    sel.replaceChildren();
+    const allOpt = document.createElement('option');
+    allOpt.value = '';
+    allOpt.textContent = 'Todas as marcas';
+    sel.appendChild(allOpt);
+    cachedBrands.forEach(function(b) {
+      const opt = document.createElement('option');
+      opt.value = String(b.id);
+      opt.textContent = b.name + (b.is_active ? '' : ' (inativa)');
+      sel.appendChild(opt);
+    });
+    sel.value = current;
+  }
+
+  document.getElementById('posts-brand-filter').addEventListener('change', function() {
+    currentBrandFilter = this.value;
+    loadPosts(currentBrandFilter);
+  });
+
+  function renderBrandStatCards() {
+    const container = document.getElementById('brand-stats-container');
+    container.replaceChildren();
+    if (!cachedStats.length) return;
+    cachedStats.forEach(function(s) {
+      const card = document.createElement('div');
+      card.className = 'brand-stat-card' + (s.is_active ? '' : ' inactive');
+
+      const nameRow = document.createElement('div');
+      nameRow.className = 'brand-stat-name';
+      const nameText = document.createElement('span');
+      nameText.textContent = s.brand_name;
+      nameRow.appendChild(nameText);
+      if (!s.is_active) {
+        const badge = document.createElement('span');
+        badge.className = 'brand-inactive-badge';
+        badge.textContent = 'inativa';
+        nameRow.appendChild(badge);
+      }
+      card.appendChild(nameRow);
+      card.appendChild(buildGoalRow('Stories', s.stories_this_month, s.monthly_story_goal, 'goal-fill-story'));
+      card.appendChild(buildGoalRow('Reels', s.reels_this_month, s.monthly_reel_goal, 'goal-fill-reel'));
+      container.appendChild(card);
+    });
+  }
+
+  function buildGoalRow(label, done, goal, fillClass) {
+    const row = document.createElement('div');
+    row.className = 'goal-row';
+
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'goal-label';
+    const labelText = document.createElement('span');
+    labelText.textContent = label;
+    labelDiv.appendChild(labelText);
+
+    const fraction = document.createElement('span');
+    fraction.className = 'goal-fraction';
+    fraction.textContent = goal != null ? String(done) + ' / ' + String(goal) : String(done);
+    labelDiv.appendChild(fraction);
+    row.appendChild(labelDiv);
+
+    const track = document.createElement('div');
+    track.className = 'goal-track';
+    const fill = document.createElement('div');
+    const isDone = goal != null && done >= goal;
+    fill.className = 'goal-fill ' + (isDone ? 'goal-fill-done' : fillClass);
+    fill.style.width = (goal ? Math.min(Math.round((done / goal) * 100), 100) : 0) + '%';
+    track.appendChild(fill);
+    row.appendChild(track);
+    return row;
+  }
+
+  async function loadPosts(brandId) {
+    const tbody = document.getElementById('posts-tbody');
+    tbody.replaceChildren();
+    const loadingTr = document.createElement('tr');
+    loadingTr.className = 'empty-row';
+    const loadingTd = document.createElement('td');
+    loadingTd.setAttribute('colspan', '6');
+    loadingTd.textContent = 'Carregando...';
+    loadingTr.appendChild(loadingTd);
+    tbody.appendChild(loadingTr);
+
+    try {
+      const url = '/api/admin/posts' + (brandId ? '?brand_id=' + brandId : '');
+      const res = await fetch(url, { headers: authHeader() });
+      if (res.status === 401) { showLogin('Sessão expirada.'); return; }
+      const posts = await res.json();
+      renderPostsTable(posts);
+    } catch (e) {
+      console.error('Erro ao carregar postagens', e);
+    }
+  }
+
+  function makePostDeleteBtn(id) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const btn = document.createElement('button');
+    btn.className = 'btn-sm btn-delete';
+    btn.title = 'Excluir postagem';
+
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('width', '15');
+    svg.setAttribute('height', '15');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2.2');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+
+    const poly = document.createElementNS(NS, 'polyline');
+    poly.setAttribute('points', '3 6 5 6 21 6');
+    svg.appendChild(poly);
+    ['M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6', 'M10 11v6', 'M14 11v6', 'M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2'].forEach(function(d) {
+      const p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', d);
+      svg.appendChild(p);
+    });
+
+    btn.appendChild(svg);
+    btn.addEventListener('click', function() { deletePost(id); });
+    return btn;
+  }
+
+  function renderPostsTable(posts) {
+    const tbody = document.getElementById('posts-tbody');
+    tbody.replaceChildren();
+
+    if (!posts.length) {
+      const tr = document.createElement('tr');
+      tr.className = 'empty-row';
+      const td = document.createElement('td');
+      td.setAttribute('colspan', '6');
+      td.textContent = 'Nenhuma postagem registrada.';
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+      return;
+    }
+
+    posts.forEach(function(post) {
+      const tr = document.createElement('tr');
+
+      // Media thumb
+      const mediaTd = document.createElement('td');
+      if (post.media_url) {
+        const img = document.createElement('img');
+        img.src = post.media_url;
+        img.className = 'post-media-thumb';
+        img.title = 'Ver mídia';
+        img.addEventListener('click', function() { openLightbox(post.media_url); });
+        mediaTd.appendChild(img);
+      } else {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'post-no-media';
+        placeholder.textContent = '\uD83D\uDCF7';
+        mediaTd.appendChild(placeholder);
+      }
+      tr.appendChild(mediaTd);
+
+      // Brand
+      const brandTd = document.createElement('td');
+      brandTd.textContent = post.brand_name;
+      tr.appendChild(brandTd);
+
+      // Type badge
+      const typeTd = document.createElement('td');
+      const typeBadge = document.createElement('span');
+      typeBadge.className = 'post-type-badge ' + (post.type === 'story' ? 'type-story' : 'type-reel');
+      typeBadge.textContent = post.type === 'story' ? 'Story' : 'Reel';
+      typeTd.appendChild(typeBadge);
+      tr.appendChild(typeTd);
+
+      // Date
+      const dateTd = document.createElement('td');
+      const d = new Date(post.posted_at);
+      dateTd.textContent = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      tr.appendChild(dateTd);
+
+      // Notes
+      const notesTd = document.createElement('td');
+      notesTd.textContent = post.notes || '\u2014';
+      notesTd.style.color = post.notes ? '#2d2d2d' : '#ccc';
+      notesTd.style.fontSize = '.88rem';
+      tr.appendChild(notesTd);
+
+      // Actions
+      const actionsTd = document.createElement('td');
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'actions';
+      actionsDiv.appendChild(makeActionBtn('Editar', 'btn-edit', function() { openEditPost(post); }));
+      actionsDiv.appendChild(makePostDeleteBtn(post.id));
+      actionsTd.appendChild(actionsDiv);
+      tr.appendChild(actionsTd);
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ---- Post modal ----
+  const postModal = document.getElementById('post-modal');
+  document.getElementById('new-post-btn').addEventListener('click', openCreatePost);
+  document.getElementById('post-modal-close-btn').addEventListener('click', function() { postModal.close(); });
+  document.getElementById('post-modal-cancel-btn').addEventListener('click', function() { postModal.close(); });
+
+  function toLocalDatetimeInput(isoStr) {
+    if (!isoStr) return '';
+    const d = new Date(isoStr);
+    const pad = function(n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
+      + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+
+  function openCreatePost() {
+    editingPostId = null;
+    document.getElementById('post-modal-title').textContent = 'Nova Postagem';
+    document.getElementById('post-field-brand').selectedIndex = 0;
+    document.getElementById('post-field-type').value = 'story';
+    document.getElementById('post-field-date').value = toLocalDatetimeInput(new Date().toISOString());
+    document.getElementById('post-field-notes').value = '';
+    document.getElementById('post-field-media').value = '';
+    document.getElementById('post-field-media-url').value = '';
+    document.getElementById('post-upload-preview').style.display = 'none';
+    document.getElementById('post-modal-error').textContent = '';
+    postModal.showModal();
+  }
+
+  function openEditPost(post) {
+    editingPostId = post.id;
+    document.getElementById('post-modal-title').textContent = 'Editar Postagem';
+    document.getElementById('post-field-brand').value = String(post.brand_id);
+    document.getElementById('post-field-type').value = post.type;
+    document.getElementById('post-field-date').value = toLocalDatetimeInput(post.posted_at);
+    document.getElementById('post-field-notes').value = post.notes || '';
+    document.getElementById('post-field-media').value = '';
+    document.getElementById('post-field-media-url').value = post.media_url || '';
+    const preview = document.getElementById('post-upload-preview');
+    if (post.media_url) {
+      document.getElementById('post-upload-thumb').src = post.media_url;
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
+    }
+    document.getElementById('post-modal-error').textContent = '';
+    postModal.showModal();
+  }
+
+  document.getElementById('post-field-media').addEventListener('change', async function() {
+    const file = this.files[0];
+    if (!file) return;
+    const preview = document.getElementById('post-upload-preview');
+    const thumb = document.getElementById('post-upload-thumb');
+    const progress = document.getElementById('post-upload-progress');
+    const mediaUrlInput = document.getElementById('post-field-media-url');
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      thumb.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+
+    progress.textContent = 'Enviando...';
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: authHeader(),
+        body: formData,
+      });
+      if (!res.ok) { progress.textContent = 'Erro ao enviar imagem.'; return; }
+      const data = await res.json();
+      mediaUrlInput.value = data.url;
+      progress.textContent = 'Imagem enviada!';
+      setTimeout(function() { progress.textContent = ''; }, 2000);
+    } catch (e) {
+      progress.textContent = 'Erro de rede ao enviar.';
+    }
+  });
+
+  document.getElementById('post-modal-save-btn').addEventListener('click', savePost);
+
+  async function savePost() {
+    const errorEl = document.getElementById('post-modal-error');
+    errorEl.textContent = '';
+    const saveBtn = document.getElementById('post-modal-save-btn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Salvando\u2026';
+
+    const brand_id = parseInt(document.getElementById('post-field-brand').value, 10);
+    const type = document.getElementById('post-field-type').value;
+    const posted_at = document.getElementById('post-field-date').value;
+    const notes = document.getElementById('post-field-notes').value.trim() || null;
+    const media_url = document.getElementById('post-field-media-url').value || null;
+
+    if (!brand_id) { errorEl.textContent = 'Selecione uma marca.'; saveBtn.disabled = false; saveBtn.textContent = 'Salvar'; return; }
+    if (!posted_at) { errorEl.textContent = 'Informe a data da postagem.'; saveBtn.disabled = false; saveBtn.textContent = 'Salvar'; return; }
+
+    const progress = document.getElementById('post-upload-progress');
+    if (progress.textContent === 'Enviando...') {
+      errorEl.textContent = 'Aguarde o upload da imagem terminar.';
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Salvar';
+      return;
+    }
+
+    const body = JSON.stringify({ brand_id, type, posted_at: new Date(posted_at).toISOString(), notes, media_url });
+    const url = editingPostId ? '/api/admin/posts/' + editingPostId : '/api/admin/posts';
+    const method = editingPostId ? 'PUT' : 'POST';
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: Object.assign({ 'Content-Type': 'application/json' }, authHeader()),
+        body,
+      });
+      if (res.status === 401) { postModal.close(); showLogin('Sess\u00e3o expirada.'); return; }
+      if (!res.ok) {
+        const data = await res.json().catch(function() { return {}; });
+        errorEl.textContent = data.detail || 'Erro ao salvar.';
+        return;
+      }
+      postModal.close();
+      await loadPostsStats();
+      loadPosts(currentBrandFilter);
+    } catch {
+      errorEl.textContent = 'Erro de rede.';
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Salvar';
+    }
+  }
+
+  async function deletePost(id) {
+    if (!confirm('Excluir esta postagem?')) return;
+    try {
+      const res = await fetch('/api/admin/posts/' + id, { method: 'DELETE', headers: authHeader() });
+      if (res.status === 401) { showLogin('Sess\u00e3o expirada.'); return; }
+      await loadPostsStats();
+      loadPosts(currentBrandFilter);
+    } catch (e) {
+      console.error('Erro ao excluir postagem', e);
+    }
+  }
+
+  // ---- Brands manager ----
+  const brandsModal = document.getElementById('brands-modal');
+  const brandEditModal = document.getElementById('brand-edit-modal');
+
+  document.getElementById('manage-brands-btn').addEventListener('click', function() {
+    loadBrandsData().then(function() { renderBrandsList(); });
+    brandsModal.showModal();
+  });
+  document.getElementById('brands-modal-close-btn').addEventListener('click', function() { brandsModal.close(); });
+  document.getElementById('brands-modal-cancel-btn').addEventListener('click', function() { brandsModal.close(); });
+
+  function renderBrandsList() {
+    const container = document.getElementById('brands-list-container');
+    container.replaceChildren();
+
+    if (!cachedBrands.length) {
+      const empty = document.createElement('p');
+      empty.style.cssText = 'text-align:center;color:#aaa;font-style:italic;padding:16px 0';
+      empty.textContent = 'Nenhuma marca cadastrada.';
+      container.appendChild(empty);
+      return;
+    }
+
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    const table = document.createElement('table');
+
+    const thead = document.createElement('thead');
+    const theadRow = document.createElement('tr');
+    ['Nome', 'Status', 'Metas/m\u00eas', 'A\u00e7\u00f5es'].forEach(function(h) {
+      const th = document.createElement('th');
+      th.textContent = h;
+      theadRow.appendChild(th);
+    });
+    thead.appendChild(theadRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    cachedBrands.forEach(function(b) {
+      const tr = document.createElement('tr');
+
+      const nameTd = document.createElement('td');
+      nameTd.textContent = b.name;
+      tr.appendChild(nameTd);
+
+      const statusTd = document.createElement('td');
+      const statusBadge = document.createElement('span');
+      statusBadge.className = 'status-badge ' + (b.is_active ? 'status-active' : 'status-inactive');
+      statusBadge.textContent = b.is_active ? 'Ativa' : 'Inativa';
+      statusTd.appendChild(statusBadge);
+      tr.appendChild(statusTd);
+
+      const goalsTd = document.createElement('td');
+      const storyGoal = b.monthly_story_goal != null ? String(b.monthly_story_goal) + ' st' : '\u2013';
+      const reelGoal = b.monthly_reel_goal != null ? String(b.monthly_reel_goal) + ' rl' : '\u2013';
+      goalsTd.textContent = storyGoal + ' / ' + reelGoal;
+      goalsTd.style.fontSize = '.85rem';
+      goalsTd.style.color = '#888';
+      tr.appendChild(goalsTd);
+
+      const actionsTd = document.createElement('td');
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'actions';
+      actionsDiv.appendChild(makeActionBtn('Editar', 'btn-edit', function() { openBrandEdit(b); }));
+      const toggleLabel = b.is_active ? 'Desativar' : 'Ativar';
+      const toggleClass = b.is_active ? 'btn-deactivate' : 'btn-activate';
+      actionsDiv.appendChild(makeActionBtn(toggleLabel, toggleClass, function() { toggleBrand(b.id, !b.is_active); }));
+      actionsTd.appendChild(actionsDiv);
+      tr.appendChild(actionsTd);
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    container.appendChild(wrap);
+  }
+
+  document.getElementById('brand-add-btn').addEventListener('click', async function() {
+    const input = document.getElementById('brand-name-input');
+    const errorEl = document.getElementById('brand-add-error');
+    const name = input.value.trim();
+    errorEl.textContent = '';
+    if (!name) { errorEl.textContent = 'Informe o nome da marca.'; return; }
+    const btn = this;
+    btn.disabled = true;
+    try {
+      const res = await fetch('/api/admin/brands', {
+        method: 'POST',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, authHeader()),
+        body: JSON.stringify({ name }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(function() { return {}; });
+        errorEl.textContent = data.detail || 'Erro ao adicionar marca.';
+        return;
+      }
+      input.value = '';
+      await loadBrandsData();
+      renderBrandsList();
+    } catch (e) {
+      errorEl.textContent = 'Erro de rede.';
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('brand-name-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('brand-add-btn').click();
+  });
+
+  async function toggleBrand(id, activate) {
+    try {
+      const res = await fetch('/api/admin/brands/' + id, {
+        method: 'PUT',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, authHeader()),
+        body: JSON.stringify({ is_active: activate }),
+      });
+      if (!res.ok) return;
+      await loadBrandsData();
+      renderBrandsList();
+      renderBrandStatCards();
+    } catch (e) {
+      console.error('Erro ao alterar status da marca', e);
+    }
+  }
+
+  document.getElementById('brand-edit-close-btn').addEventListener('click', function() { brandEditModal.close(); });
+  document.getElementById('brand-edit-cancel-btn').addEventListener('click', function() { brandEditModal.close(); });
+
+  function openBrandEdit(brand) {
+    editingBrandId = brand.id;
+    document.getElementById('brand-edit-title').textContent = 'Editar \u2014 ' + brand.name;
+    document.getElementById('brand-edit-name').value = brand.name;
+    document.getElementById('brand-edit-story-goal').value = brand.monthly_story_goal != null ? String(brand.monthly_story_goal) : '';
+    document.getElementById('brand-edit-reel-goal').value = brand.monthly_reel_goal != null ? String(brand.monthly_reel_goal) : '';
+    document.getElementById('brand-edit-error').textContent = '';
+    brandEditModal.showModal();
+  }
+
+  document.getElementById('brand-edit-save-btn').addEventListener('click', async function() {
+    const errorEl = document.getElementById('brand-edit-error');
+    errorEl.textContent = '';
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Salvando\u2026';
+
+    const name = document.getElementById('brand-edit-name').value.trim();
+    const storyGoalRaw = document.getElementById('brand-edit-story-goal').value.trim();
+    const reelGoalRaw = document.getElementById('brand-edit-reel-goal').value.trim();
+
+    if (!name) { errorEl.textContent = 'Nome \u00e9 obrigat\u00f3rio.'; btn.disabled = false; btn.textContent = 'Salvar'; return; }
+
+    const body = {
+      name,
+      monthly_story_goal: storyGoalRaw !== '' ? parseInt(storyGoalRaw, 10) : null,
+      monthly_reel_goal: reelGoalRaw !== '' ? parseInt(reelGoalRaw, 10) : null,
+    };
+
+    try {
+      const res = await fetch('/api/admin/brands/' + editingBrandId, {
+        method: 'PUT',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, authHeader()),
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(function() { return {}; });
+        errorEl.textContent = data.detail || 'Erro ao salvar.';
+        return;
+      }
+      brandEditModal.close();
+      await loadBrandsData();
+      renderBrandsList();
+      renderBrandStatCards();
+    } catch (e) {
+      errorEl.textContent = 'Erro de rede.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Salvar';
+    }
+  });
+
+  // ---- Lightbox ----
+  const lightbox = document.getElementById('media-lightbox');
+  document.getElementById('lightbox-img').addEventListener('click', function() { lightbox.close(); });
+  lightbox.addEventListener('click', function(e) { if (e.target === lightbox) lightbox.close(); });
+
+  function openLightbox(url) {
+    document.getElementById('lightbox-img').src = url;
+    lightbox.showModal();
   }
 
   // ---- Init ----

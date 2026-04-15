@@ -2,6 +2,7 @@ from datetime import datetime
 from pathlib import Path
 
 import admin as admin_module
+import posts as posts_module
 from database import Base, engine, get_db
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, RedirectResponse
@@ -11,9 +12,11 @@ from pydantic import BaseModel
 from sqlalchemy import func
 
 FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
+UPLOADS_DIR = Path(__file__).parent / "uploads"
 
 app = FastAPI(title="Clara Braga — Links")
 app.include_router(admin_module.router)
+app.include_router(posts_module.router)
 
 INITIAL_LINKS = [
     {
@@ -70,8 +73,11 @@ def startup():
         db.commit()
 
 
-# --- Static files (CSS, assets) ---
+# --- Static files (CSS, assets, local uploads) ---
 app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
+
+UPLOADS_DIR.mkdir(exist_ok=True)
+app.mount("/static/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
 
 
 # --- Frontend ---
