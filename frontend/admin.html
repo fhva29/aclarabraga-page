@@ -7,6 +7,92 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <style>
+    /* ---- Flatpickr custom theme ---- */
+    #post-field-date,
+    #post-date-wrapper .flatpickr-input.form-control,
+    #post-date-wrapper input.flatpickr-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #f0d0dd;
+      border-radius: 9px;
+      font-family: 'Nunito', sans-serif;
+      font-size: .95rem;
+      outline: none;
+      background: #fff;
+      color: #2d2d2d;
+      transition: border-color .2s;
+      cursor: pointer;
+    }
+    #post-field-date:focus,
+    #post-date-wrapper input.flatpickr-input:focus { border-color: #F25C8A; }
+
+    .flatpickr-calendar {
+      font-family: 'Nunito', sans-serif;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(242,92,138,.18);
+      border: none;
+      overflow: hidden;
+      transform: scale(0.88);
+      transform-origin: top left;
+      margin-bottom: -24px;
+    }
+    .flatpickr-months {
+      background: #F25C8A;
+      border-radius: 14px 14px 0 0;
+      padding: 4px 0;
+    }
+    .flatpickr-months .flatpickr-month,
+    .flatpickr-months .flatpickr-prev-month,
+    .flatpickr-months .flatpickr-next-month {
+      color: #fff;
+      fill: #fff;
+    }
+    .flatpickr-months .flatpickr-prev-month:hover svg,
+    .flatpickr-months .flatpickr-next-month:hover svg { fill: #ffd6e7; }
+    .flatpickr-current-month input.cur-year,
+    .flatpickr-current-month .flatpickr-monthDropdown-months {
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+    }
+    .flatpickr-current-month .flatpickr-monthDropdown-months option { color: #2d2d2d; }
+    .flatpickr-weekdays { background: #fdf0f5; }
+    span.flatpickr-weekday {
+      color: #F25C8A;
+      font-weight: 800;
+      font-size: .8rem;
+      background: #fdf0f5;
+    }
+    .flatpickr-day {
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      color: #2d2d2d;
+    }
+    .flatpickr-day:hover { background: #fdedf4; border-color: #fdedf4; color: #F25C8A; }
+    .flatpickr-day.today { border-color: #F25C8A; color: #F25C8A; }
+    .flatpickr-day.today:hover { background: #fdedf4; }
+    .flatpickr-day.selected,
+    .flatpickr-day.selected:hover {
+      background: #F25C8A;
+      border-color: #F25C8A;
+      color: #fff;
+    }
+    .flatpickr-day.flatpickr-disabled,
+    .flatpickr-day.flatpickr-disabled:hover { color: #ddd; }
+    .flatpickr-time { border-top: 1.5px solid #f0d0dd; }
+    .flatpickr-time input,
+    .flatpickr-time .flatpickr-time-separator,
+    .flatpickr-time .flatpickr-am-pm {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      color: #2d2d2d;
+    }
+    .flatpickr-time input:hover,
+    .flatpickr-time input:focus { background: #fdedf4; }
+  </style>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -677,6 +763,17 @@
       font-style: italic;
     }
 
+    /* ---- File picker button ---- */
+    #post-file-btn:hover {
+      border-color: #F25C8A;
+      background: #fdedf4;
+    }
+
+    /* ---- Brands manager dialog ---- */
+    #brands-modal {
+      max-width: 680px;
+    }
+
     /* ---- Link generator dialog ---- */
     #link-gen-dialog {
       border: none;
@@ -1145,9 +1242,9 @@
         <option value="reel">Reel</option>
       </select>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="post-date-wrapper">
       <label for="post-field-date">Data da postagem</label>
-      <input type="datetime-local" id="post-field-date" />
+      <input type="text" id="post-field-date" readonly />
     </div>
     <div class="form-group">
       <label for="post-field-notes">Observações <small style="color:#aaa">(opcional)</small></label>
@@ -1155,7 +1252,11 @@
     </div>
     <div class="form-group">
       <label for="post-field-media">Mídia <small style="color:#aaa">(imagem opcional)</small></label>
-      <input type="file" id="post-field-media" accept="image/*" style="width:100%;font-family:inherit;font-size:.9rem;" />
+      <input type="file" id="post-field-media" accept="image/*" style="display:none" />
+      <button type="button" id="post-file-btn" onclick="document.getElementById('post-field-media').click()" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1.5px dashed #f0a0be;border-radius:10px;background:#fff6fa;color:#c0507a;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;width:100%;transition:border-color .2s,background .2s;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span id="post-file-label">Escolher arquivo</span>
+      </button>
       <div class="upload-preview" id="post-upload-preview">
         <img id="post-upload-thumb" src="" alt="Preview" />
         <div class="upload-progress" id="post-upload-progress"></div>
@@ -1176,7 +1277,7 @@
     <h2>Gerenciar Marcas</h2>
     <button class="modal-close" id="brands-modal-close-btn" type="button">&#215;</button>
   </div>
-  <div class="modal-body" style="max-height:60vh;overflow-y:auto">
+  <div class="modal-body" style="max-height:70vh;overflow-y:auto">
     <div style="display:flex;gap:8px;margin-bottom:16px">
       <input type="text" id="brand-name-input" placeholder="Nome da marca" style="flex:1;padding:10px 14px;border:1.5px solid #f0d0dd;border-radius:9px;font-family:inherit;font-size:.95rem;outline:none;" />
       <button class="btn-add" id="brand-add-btn" style="white-space:nowrap">Adicionar</button>
@@ -2198,9 +2299,10 @@
     document.getElementById('post-modal-title').textContent = 'Nova Postagem';
     document.getElementById('post-field-brand').selectedIndex = 0;
     document.getElementById('post-field-type').value = 'story';
-    document.getElementById('post-field-date').value = toLocalDatetimeInput(new Date().toISOString());
+    window._postDatePicker.setDate(new Date(), true);
     document.getElementById('post-field-notes').value = '';
     document.getElementById('post-field-media').value = '';
+    document.getElementById('post-file-label').textContent = 'Escolher arquivo';
     document.getElementById('post-field-media-url').value = '';
     document.getElementById('post-upload-preview').style.display = 'none';
     document.getElementById('post-modal-error').textContent = '';
@@ -2212,9 +2314,10 @@
     document.getElementById('post-modal-title').textContent = 'Editar Postagem';
     document.getElementById('post-field-brand').value = String(post.brand_id);
     document.getElementById('post-field-type').value = post.type;
-    document.getElementById('post-field-date').value = toLocalDatetimeInput(post.posted_at);
+    window._postDatePicker.setDate(post.posted_at ? new Date(post.posted_at) : new Date(), true);
     document.getElementById('post-field-notes').value = post.notes || '';
     document.getElementById('post-field-media').value = '';
+    document.getElementById('post-file-label').textContent = 'Escolher arquivo';
     document.getElementById('post-field-media-url').value = post.media_url || '';
     const preview = document.getElementById('post-upload-preview');
     if (post.media_url) {
@@ -2229,6 +2332,8 @@
 
   document.getElementById('post-field-media').addEventListener('change', async function() {
     const file = this.files[0];
+    const fileLabel = document.getElementById('post-file-label');
+    fileLabel.textContent = file ? file.name : 'Escolher arquivo';
     if (!file) return;
     const preview = document.getElementById('post-upload-preview');
     const thumb = document.getElementById('post-upload-thumb');
@@ -2525,6 +2630,20 @@
   } else {
     showLogin();
   }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+<script>
+  window._postDatePicker = flatpickr('#post-field-date', {
+    enableTime: true,
+    dateFormat: 'Y-m-d\\TH:i',
+    altInput: true,
+    altFormat: 'd/m/Y H:i',
+    locale: 'pt',
+    time_24hr: true,
+    static: true,
+    appendTo: document.getElementById('post-date-wrapper'),
+  });
 </script>
 </body>
 </html>

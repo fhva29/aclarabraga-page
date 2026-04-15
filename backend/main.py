@@ -74,10 +74,9 @@ def startup():
 
 
 # --- Static files (CSS, assets, local uploads) ---
-app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
-
 UPLOADS_DIR.mkdir(exist_ok=True)
-app.mount("/static/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
+app.mount("/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
+app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
 
 
 # --- Frontend ---

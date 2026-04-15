@@ -102,7 +102,7 @@ def _upload_local(file_bytes: bytes, filename: str) -> str:
     dest = os.path.join(_LOCAL_UPLOAD_DIR, filename)
     with open(dest, "wb") as f:
         f.write(file_bytes)
-    return f"/static/uploads/{filename}"
+    return f"/uploads/{filename}"
 
 
 def _is_supabase_configured() -> bool:
