@@ -401,7 +401,7 @@ body {
 .card__coupon {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: var(--pink-soft);
   border: 1.5px dashed var(--pink);
   color: var(--pink-deep);
@@ -513,9 +513,7 @@ body {
 }
 
 .coupon-card__code-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  width: 100%;
 }
 
 .coupon-card__code {
@@ -524,12 +522,26 @@ body {
   color: var(--pink-light);
   font-size: 1.2rem;
   font-weight: 900;
-  padding: 10px 18px;
+  padding: 14px 20px;
   border-radius: 10px;
   letter-spacing: 3px;
-  flex: 1;
   text-align: center;
   cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.coupon-card__code svg {
+  flex-shrink: 0;
+}
+
+.coupon-card__code:hover {
+  background: rgba(242, 92, 138, 0.28);
+  border-color: var(--pink);
 }
 
 .coupon-card__code--copied {
@@ -538,29 +550,25 @@ body {
   color: white;
 }
 
-.coupon-card__copy {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: rgba(255,255,255,0.7);
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 800;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  white-space: nowrap;
-  letter-spacing: 0.5px;
-}
-
-.coupon-card__copy:hover {
-  background: rgba(255,255,255,0.18);
-  color: var(--white);
-}
-
-.coupon-card__copy--done {
-  background: rgba(242,92,138,0.3);
+.coupon-card__img-btn {
+  width: 100%;
+  background: rgba(242,92,138,0.12);
   color: var(--pink-light);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(242,92,138,0.3);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s, transform 0.15s;
+  letter-spacing: 0.2px;
+}
+
+.coupon-card__img-btn:hover {
+  background: rgba(242,92,138,0.22);
+  transform: translateY(-1px);
 }
 
 .coupon-card__cta {
@@ -576,6 +584,55 @@ body {
   display: block;
   transition: background 0.2s, transform 0.2s;
   letter-spacing: 0.3px;
+}
+
+/* Image modal */
+.img-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.18s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.img-modal__img {
+  max-width: 100%;
+  max-height: 90dvh;
+  border-radius: 16px;
+  object-fit: contain;
+  touch-action: pinch-zoom;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+}
+
+.img-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.img-modal__close:hover {
+  background: rgba(255,255,255,0.3);
 }
 
 .coupon-card__cta:hover {

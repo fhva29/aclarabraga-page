@@ -1,11 +1,18 @@
+import uuid
 from datetime import datetime, timedelta
+from pathlib import Path
 
 from auth import require_admin
 from database import get_db
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from models import Click, Link
 from pydantic import BaseModel
 from sqlalchemy import func
+
+UPLOADS_DIR = Path(__file__).parent / "uploads"
+UPLOADS_DIR.mkdir(exist_ok=True)
+ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
+MAX_UPLOAD_BYTES = 10 * 1024 * 1024  # 10 MB
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -19,6 +26,7 @@ class LinkCreate(BaseModel):
     description: str | None = None
     destination_url: str
     coupon_code: str | None = None
+    coupon_image_url: str | None = None
     icon: str | None = None
     category: str = "produto"
 
@@ -28,6 +36,7 @@ class LinkUpdate(BaseModel):
     description: str | None = None
     destination_url: str | None = None
     coupon_code: str | None = None
+    coupon_image_url: str | None = None
     icon: str | None = None
     category: str | None = None
     is_active: bool | None = None
@@ -40,6 +49,7 @@ class LinkAdminOut(BaseModel):
     description: str | None
     destination_url: str
     coupon_code: str | None
+    coupon_image_url: str | None
     icon: str | None
     category: str
     is_active: bool
@@ -51,6 +61,26 @@ class LinkAdminOut(BaseModel):
 
 
 # --- Routes ---
+
+
+@router.post("/upload-coupon-image", status_code=status.HTTP_200_OK)
+async def upload_coupon_image(
+    file: UploadFile = File(...),
+    _=Depends(require_admin),
+):
+    if file.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(status_code=400, detail="Tipo de arquivo não permitido")
+
+    contents = await file.read()
+    if len(contents) > MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=400, detail="Arquivo muito grande (máx 10 MB)")
+
+    ext = file.filename.rsplit(".", 1)[-1] if "." in file.filename else "jpg"
+    filename = f"{uuid.uuid4().hex}.{ext}"
+    dest = UPLOADS_DIR / filename
+    dest.write_bytes(contents)
+
+    return {"url": f"/uploads/{filename}"}
 
 
 @router.get("/links", response_model=list[LinkAdminOut])
@@ -72,6 +102,7 @@ def admin_list_links(_=Depends(require_admin)):
                 description=link.description,
                 destination_url=link.destination_url,
                 coupon_code=link.coupon_code,
+                coupon_image_url=link.coupon_image_url,
                 icon=link.icon,
                 category=link.category,
                 is_active=link.is_active,
@@ -101,6 +132,7 @@ def admin_create_link(data: LinkCreate, _=Depends(require_admin)):
             description=link.description,
             destination_url=link.destination_url,
             coupon_code=link.coupon_code,
+            coupon_image_url=link.coupon_image_url,
             icon=link.icon,
             category=link.category,
             is_active=link.is_active,
@@ -131,6 +163,7 @@ def admin_update_link(link_id: int, data: LinkUpdate, _=Depends(require_admin)):
             description=link.description,
             destination_url=link.destination_url,
             coupon_code=link.coupon_code,
+            coupon_image_url=link.coupon_image_url,
             icon=link.icon,
             category=link.category,
             is_active=link.is_active,

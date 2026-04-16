@@ -1184,22 +1184,35 @@
       <input type="url" id="field-url" placeholder="https://..." />
     </div>
     <div class="form-group">
-      <label for="field-coupon">Cupom <small style="color:#aaa">(opcional)</small></label>
-      <input type="text" id="field-coupon" placeholder="CLARA10" />
-    </div>
-    <div class="form-group">
-      <label>Ícone</label>
-      <div class="icon-picker">
-        <div class="icon-grid" id="icon-grid"></div>
-        <input type="hidden" id="field-icon" value="" />
-      </div>
-    </div>
-    <div class="form-group">
       <label for="field-category">Categoria</label>
       <select id="field-category">
         <option value="produto">Produto</option>
         <option value="cupom">Cupom</option>
       </select>
+    </div>
+    <div class="form-group">
+      <label for="field-coupon">Código do cupom <small style="color:#aaa">(opcional)</small></label>
+      <input type="text" id="field-coupon" placeholder="CLARA10" />
+    </div>
+    <div class="form-group" id="group-coupon-image" style="display:none">
+      <label>Imagem do cupom <small style="color:#aaa">(opcional — print de story, etc.)</small></label>
+      <input type="file" id="field-coupon-image-file" accept="image/*" style="display:none" />
+      <button type="button" id="coupon-file-btn" onclick="document.getElementById('field-coupon-image-file').click()" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1.5px dashed #f0a0be;border-radius:10px;background:#fff6fa;color:#c0507a;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;width:100%;transition:border-color .2s,background .2s;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span id="coupon-file-label">Escolher arquivo</span>
+      </button>
+      <div class="upload-preview" id="coupon-upload-preview">
+        <img id="coupon-upload-thumb" src="" alt="Preview" />
+        <div class="upload-progress" id="coupon-upload-progress"></div>
+      </div>
+      <input type="hidden" id="field-coupon-image-url" value="" />
+    </div>
+    <div class="form-group" id="group-icon">
+      <label>Ícone</label>
+      <div class="icon-picker">
+        <div class="icon-grid" id="icon-grid"></div>
+        <input type="hidden" id="field-icon" value="" />
+      </div>
     </div>
     <div class="form-error" id="modal-error"></div>
   </div>
@@ -1419,6 +1432,7 @@
       if (res.status === 401) { clearToken(); showLogin('Senha incorreta.'); return; }
       if (!res.ok) { clearToken(); showLogin('Erro ao conectar. Tente novamente.'); return; }
       const links = await res.json();
+      cachedLinks = links;
       showAdmin();
       renderTable(links);
     } catch {
@@ -1814,6 +1828,57 @@
   // ---- Modal ----
   const modal = document.getElementById('link-modal');
 
+  function updateCouponImageVisibility() {
+    const isCupom = document.getElementById('field-category').value === 'cupom';
+    document.getElementById('group-coupon-image').style.display = isCupom ? '' : 'none';
+    document.getElementById('group-icon').style.display = isCupom ? 'none' : '';
+  }
+
+  document.getElementById('field-category').addEventListener('change', updateCouponImageVisibility);
+
+  function setCouponImagePreview(url) {
+    const preview = document.getElementById('coupon-upload-preview');
+    const thumb = document.getElementById('coupon-upload-thumb');
+    const progress = document.getElementById('coupon-upload-progress');
+    document.getElementById('field-coupon-image-url').value = url || '';
+    document.getElementById('coupon-file-label').textContent = url ? 'Trocar arquivo' : 'Escolher arquivo';
+    if (url) {
+      thumb.src = url;
+      progress.textContent = '';
+      preview.style.display = '';
+    } else {
+      thumb.src = '';
+      preview.style.display = 'none';
+    }
+  }
+
+  document.getElementById('field-coupon-image-file').addEventListener('change', async function() {
+    const file = this.files[0];
+    if (!file) return;
+    const errorEl = document.getElementById('modal-error');
+    const progress = document.getElementById('coupon-upload-progress');
+    errorEl.textContent = '';
+    progress.textContent = 'Enviando…';
+    document.getElementById('coupon-upload-preview').style.display = '';
+    document.getElementById('coupon-upload-thumb').src = '';
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await fetch('/api/admin/upload-coupon-image', {
+        method: 'POST',
+        headers: authHeader(),
+        body: formData,
+      });
+      if (!res.ok) { const d = await res.json(); progress.textContent = ''; errorEl.textContent = d.detail || 'Erro no upload.'; return; }
+      const data = await res.json();
+      setCouponImagePreview(data.url);
+    } catch {
+      progress.textContent = '';
+      errorEl.textContent = 'Erro de rede no upload.';
+    }
+    this.value = '';
+  });
+
   document.getElementById('new-link-btn').addEventListener('click', openCreateModal);
   document.getElementById('modal-close-btn').addEventListener('click', function() { modal.close(); });
   document.getElementById('modal-cancel-btn').addEventListener('click', function() { modal.close(); });
@@ -1828,7 +1893,9 @@
     document.getElementById('field-url').value = '';
     document.getElementById('field-coupon').value = '';
     document.getElementById('field-category').value = 'produto';
+    setCouponImagePreview('');
     setIconPicker('');
+    updateCouponImageVisibility();
     document.getElementById('modal-error').textContent = '';
     modal.showModal();
     document.getElementById('field-slug').focus();
@@ -1846,7 +1913,9 @@
     document.getElementById('field-url').value = link.destination_url;
     document.getElementById('field-coupon').value = link.coupon_code || '';
     document.getElementById('field-category').value = link.category;
+    setCouponImagePreview(link.coupon_image_url || '');
     setIconPicker(link.icon || '');
+    updateCouponImageVisibility();
     document.getElementById('modal-error').textContent = '';
     modal.showModal();
     document.getElementById('field-title').focus();
@@ -1865,6 +1934,7 @@
     const description = document.getElementById('field-description').value.trim() || null;
     const destination_url = document.getElementById('field-url').value.trim();
     const coupon_code = document.getElementById('field-coupon').value.trim() || null;
+    const coupon_image_url = document.getElementById('field-coupon-image-url').value || null;
     const icon = document.getElementById('field-icon').value || null;
     const category = document.getElementById('field-category').value;
 
@@ -1876,13 +1946,13 @@
     if (editingLinkId) {
       url = '/api/admin/links/' + editingLinkId;
       method = 'PUT';
-      body = JSON.stringify({ title, description, destination_url, coupon_code, icon, category });
+      body = JSON.stringify({ title, description, destination_url, coupon_code, coupon_image_url, icon, category });
     } else {
       const slug = document.getElementById('field-slug').value.trim();
       if (!slug) { errorEl.textContent = 'Slug é obrigatório.'; saveBtn.disabled = false; saveBtn.textContent = 'Salvar'; return; }
       url = '/api/admin/links';
       method = 'POST';
-      body = JSON.stringify({ slug, title, description, destination_url, coupon_code, icon, category });
+      body = JSON.stringify({ slug, title, description, destination_url, coupon_code, coupon_image_url, icon, category });
     }
 
     try {

@@ -41,6 +41,7 @@ class Link(Base):
     description = Column(String, nullable=True)
     destination_url = Column(String, nullable=False)
     coupon_code = Column(String, nullable=True)
+    coupon_image_url = Column(String, nullable=True)
     icon = Column(String, nullable=True)
     category = Column(String, nullable=False, default="produto")  # "produto" | "cupom"
     is_active = Column(Boolean, default=True)

@@ -92,6 +92,7 @@ class LinkOut(BaseModel):
     title: str
     description: str | None
     coupon_code: str | None
+    coupon_image_url: str | None
     icon: str | None
     category: str
 
