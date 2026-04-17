@@ -74,7 +74,7 @@ def startup():
 
 
 # --- Static files (CSS, assets, local uploads) ---
-UPLOADS_DIR.mkdir(exist_ok=True)
+UPLOADS_DIR.mkdir(exist_ok=True)  # needed for local dev fallback
 app.mount("/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
 app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
 

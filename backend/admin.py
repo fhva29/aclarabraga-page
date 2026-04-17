@@ -1,3 +1,4 @@
+import os
 import uuid
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -10,9 +11,35 @@ from pydantic import BaseModel
 from sqlalchemy import func
 
 UPLOADS_DIR = Path(__file__).parent / "uploads"
-UPLOADS_DIR.mkdir(exist_ok=True)
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024  # 10 MB
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
+SUPABASE_BUCKET = os.getenv("SUPABASE_MEDIA_BUCKET", "post-media")
+
+
+def _is_supabase_configured() -> bool:
+    return bool(SUPABASE_URL and SUPABASE_KEY)
+
+
+def _upload_coupon_to_supabase(file_bytes: bytes, filename: str, content_type: str) -> str:
+    from supabase import create_client
+
+    client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    path = f"coupons/{filename}"
+    client.storage.from_(SUPABASE_BUCKET).upload(
+        path,
+        file_bytes,
+        file_options={"content-type": content_type, "upsert": "true"},
+    )
+    return client.storage.from_(SUPABASE_BUCKET).get_public_url(path)
+
+
+def _upload_coupon_local(file_bytes: bytes, filename: str) -> str:
+    UPLOADS_DIR.mkdir(exist_ok=True)
+    (UPLOADS_DIR / filename).write_bytes(file_bytes)
+    return f"/uploads/{filename}"
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -75,12 +102,16 @@ async def upload_coupon_image(
     if len(contents) > MAX_UPLOAD_BYTES:
         raise HTTPException(status_code=400, detail="Arquivo muito grande (máx 10 MB)")
 
-    ext = file.filename.rsplit(".", 1)[-1] if "." in file.filename else "jpg"
+    fname = file.filename or ""
+    ext = fname.rsplit(".", 1)[-1] if "." in fname else "jpg"
     filename = f"{uuid.uuid4().hex}.{ext}"
-    dest = UPLOADS_DIR / filename
-    dest.write_bytes(contents)
 
-    return {"url": f"/uploads/{filename}"}
+    if _is_supabase_configured():
+        url = _upload_coupon_to_supabase(contents, filename, file.content_type)
+    else:
+        url = _upload_coupon_local(contents, filename)
+
+    return {"url": url}
 
 
 @router.get("/links", response_model=list[LinkAdminOut])
